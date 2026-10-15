@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import { useState, type ReactNode } from 'react';
 import { ArrowRight, Clock, Target, Wrench, XCircle, CheckCircle2, NotebookPen, Lightbulb } from 'lucide-react';
-import { getSession, sessions } from '@/content/data/sessions';
+import { getSession, getSelfStudy, sessions } from '@/content/data/sessions';
 import { prompts, fillPrompt } from '@/content/data/prompts';
 import { examples } from '@/content/data/examples';
 import { facts, type FactKey } from '@/content/data/facts';
@@ -160,7 +160,21 @@ export function RelatedExamples({ n, limit = 3 }: { n: number; limit?: number })
 
 /** 다음 회차 안내 */
 export function NextSession({ n }: { n: number }) {
-  const next = sessions.find((s) => s.n === n + 1);
+  // 회차(정수) 다음에는 n.5 혼자 해 보기를 먼저 안내한다
+  const self = Number.isInteger(n) ? getSelfStudy(n + 0.5) : undefined;
+  if (self) {
+    return (
+      <Link href={self.slug} className="not-prose my-6 flex items-center justify-between gap-4 rounded-2xl border-2 border-dashed border-fd-primary/40 bg-fd-secondary/40 p-5 hover:border-fd-primary">
+        <span>
+          <span className="text-sm text-fd-muted-foreground">다음 수업 전까지 · 혼자 해 보기 (약 {self.minutes}분)</span>
+          <span className="block text-lg font-bold">{self.title}</span>
+          <span className="mt-1 block text-sm text-fd-muted-foreground">{self.focus}</span>
+        </span>
+        <ArrowRight className="size-5 shrink-0" />
+      </Link>
+    );
+  }
+  const next = sessions.find((s) => s.n === Math.floor(n) + 1);
   if (!next) {
     return (
       <Link href="/examples" className="not-prose my-6 flex items-center justify-between rounded-2xl border bg-fd-card p-5 hover:border-fd-primary">
@@ -210,5 +224,81 @@ export function Analogy({ title, children }: { title: string; children: ReactNod
         <div className="mt-0.5 text-[0.97rem] leading-7 text-fd-muted-foreground">{children}</div>
       </div>
     </div>
+  );
+}
+
+/** n.5 혼자 해 보기 머리말: 이번 주 계획과 진도 */
+export function SelfStudyHeader({ n }: { n: number }) {
+  const s = getSelfStudy(n)!;
+  const p = useSessionProgress(n);
+  const [doneDays, setDoneDays] = useStored<string[]>(`days:${n}`, []);
+  return (
+    <div className="not-prose mb-8 overflow-hidden rounded-2xl border">
+      <div className="bg-[linear-gradient(135deg,#0b2f63,#00a3e0)] px-6 py-5 text-white">
+        <div className="flex flex-wrap items-center gap-2 text-sm text-white/85">
+          <span className="rounded-full bg-white/15 px-2.5 py-0.5 font-semibold text-white">혼자 해 보기 · {n}</span>
+          <span className="inline-flex items-center gap-1">
+            <Clock className="size-3.5" /> 일주일 동안 약 {s.minutes}분
+          </span>
+        </div>
+        <p className="mt-3 text-[1.25rem] font-bold leading-snug tracking-[-0.035em]">{s.focus}</p>
+        <p className="mt-2 text-sm text-white/75">
+          수업이 일주일에 한 번이라 감각을 잃지 않도록, 하루 15~25분씩 나눠서 해 보세요. 한 번에 다 해도 괜찮아요.
+        </p>
+      </div>
+      <div className="grid gap-5 bg-fd-card px-6 py-5 md:grid-cols-[1fr_auto]">
+        <div>
+          <p className="mb-2 flex items-center gap-1.5 text-sm font-semibold text-fd-muted-foreground">
+            <Target className="size-4" /> 이번 주 계획 (끝낸 날은 체크)
+          </p>
+          <ul className="divide-y rounded-xl border bg-fd-background">
+            {s.plan.map((d) => {
+              const on = doneDays.includes(d.day);
+              return (
+                <li key={d.day} className="flex items-center gap-3 px-3 py-2">
+                  <button
+                    type="button"
+                    role="checkbox"
+                    aria-checked={on}
+                    aria-label={`${d.day} 완료`}
+                    onClick={() => setDoneDays((x) => (x.includes(d.day) ? x.filter((v) => v !== d.day) : [...x, d.day]))}
+                    className="shrink-0 text-fd-muted-foreground"
+                  >
+                    <CheckCircle2 className={cn('size-5', on ? 'text-[var(--color-ok)]' : 'opacity-40')} />
+                  </button>
+                  <span className="w-12 shrink-0 text-sm font-semibold">{d.day}</span>
+                  <a href={d.href} className={cn('flex-1 text-[0.95rem] hover:text-fd-primary', on && 'text-fd-muted-foreground line-through')}>
+                    {d.what}
+                  </a>
+                  <span className="shrink-0 text-xs tabular-nums text-fd-muted-foreground">{d.minutes}분</span>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+        <div className="min-w-44 rounded-xl border bg-fd-background p-4 md:self-start">
+          <p className="text-sm font-semibold">미션 진도</p>
+          <p className="mt-1 text-2xl font-bold tabular-nums">{p.total ? `${p.pct}%` : '—'}</p>
+          <ProgressBar pct={p.pct} className="mt-2" />
+          <p className="mt-2 text-xs text-fd-muted-foreground">
+            {p.total ? `${p.done} / ${p.total} 단계` : '미션 단계를 체크하면 표시돼요'}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/** 상세 설명 상자: 수업에서 다 못 한 이야기 */
+export function DeepDive({ title, children }: { title: string; children: ReactNode }) {
+  return (
+    <details className="group not-prose my-5 rounded-xl border bg-fd-card open:shadow-sm" open>
+      <summary className="flex cursor-pointer list-none items-center gap-2 px-4 py-3 font-semibold">
+        <span className="rounded-md bg-fd-primary/10 px-1.5 py-0.5 text-xs font-bold text-fd-primary">자세히</span>
+        {title}
+        <span className="ml-auto text-sm text-fd-muted-foreground group-open:hidden">펼치기</span>
+      </summary>
+      <div className="prose max-w-none border-t px-4 pb-4 pt-1">{children}</div>
+    </details>
   );
 }

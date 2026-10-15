@@ -1,7 +1,7 @@
 'use client';
 import Link from 'next/link';
 import { ArrowRight, PlayCircle } from 'lucide-react';
-import { sessions } from '@/content/data/sessions';
+import { selfStudies, sessions } from '@/content/data/sessions';
 import { useStored } from '@/lib/storage';
 import { ProgressRing, useSessionProgress } from '@/components/progress/progress';
 
@@ -53,12 +53,39 @@ function SessionNode({ n }: { n: number }) {
   );
 }
 
+function SelfChip({ n }: { n: number }) {
+  const s = selfStudies.find((x) => x.n === n)!;
+  const p = useSessionProgress(n);
+  return (
+    <Link
+      href={s.slug}
+      className="flex items-center gap-2 rounded-xl border border-dashed bg-fd-background px-3 py-2 text-sm transition-colors hover:border-fd-primary"
+    >
+      <span className="font-bold text-fd-primary">{n}</span>
+      <span className="flex-1 truncate">{s.short}</span>
+      <span className="text-xs tabular-nums text-fd-muted-foreground">{p.total ? `${p.pct}%` : `${s.minutes}분`}</span>
+    </Link>
+  );
+}
+
 export function CourseMap() {
   return (
-    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
-      {sessions.map((s) => (
-        <SessionNode key={s.n} n={s.n} />
-      ))}
-    </div>
+    <>
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+        {sessions.map((s) => (
+          <SessionNode key={s.n} n={s.n} />
+        ))}
+      </div>
+      <div className="mt-5 rounded-2xl bg-fd-muted/60 p-4">
+        <p className="mb-3 text-sm font-semibold">
+          회차 사이 혼자 해 보기 <span className="font-normal text-fd-muted-foreground">· 수업이 일주일에 한 번이라, 그 사이 하루 15~25분씩</span>
+        </p>
+        <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+          {selfStudies.map((s) => (
+            <SelfChip key={s.n} n={s.n} />
+          ))}
+        </div>
+      </div>
+    </>
   );
 }

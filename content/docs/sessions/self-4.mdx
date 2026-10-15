@@ -1,0 +1,161 @@
+---
+title: "4.5 · 혼자 해 보기: 공모 보드 키우기"
+description: "4회차와 5회차 사이. 혼자서 처음부터 배포해 보고, 1회차에 만든 마감 일정표로 보드를 채우고 기능을 붙입니다."
+---
+
+<SelfStudyHeader n={4.5} />
+
+<Callout title="준비물">
+  [자료실](/downloads)의 **4회차 완성본**(`session4-grant-board.zip`)과 1회차·1.5에서 만든 `공모_마감일정.md`. 수업 때 만든 보드가 있다면 그것으로 해도 됩니다.
+</Callout>
+
+## 1일차 웹앱은 어떻게 생겼나
+
+<KeyPoints
+  items={[
+    '흐름: 만들기(Claude Code) → 저장(Git) → 올리기(GitHub) → 배포(Vercel, 자동)',
+    '배포 주소는 누구나 볼 수 있다. 개인정보·내부 자료는 올리지 않는다.',
+    'Vercel 무료 요금제는 비상업·개인 용도. 정식 운영은 따로 검토한다.',
+  ]}
+/>
+
+<DeepDive title="공모 보드 폴더 들여다보기">
+
+4회차 완성본을 압축 풀면 이런 파일이 있습니다. 전부 외울 필요는 없고, **어디를 고치면 무엇이 바뀌는지**만 알면 됩니다.
+
+| 파일 | 하는 일 | 고치면 바뀌는 것 |
+| --- | --- | --- |
+| `data/grants.ts` | 공모 목록 데이터 | 보드에 보이는 공모 |
+| `app/page.tsx` | 첫 화면 (카드 목록, D-day 계산) | 화면 구성, 정렬, 표시 방식 |
+| `app/globals.css` | 색·글꼴·간격 | 디자인 |
+| `app/layout.tsx` | 모든 페이지 공통 틀, 브라우저 탭 제목 | 사이트 이름 |
+| `package.json` | 필요한 부품 목록과 실행 명령 | (거의 안 고침) |
+| `CLAUDE.md` | AI 작업 규칙 | AI의 행동 |
+
+직접 확인해 보세요.
+
+<PromptCard title="구조 설명 듣기" text="이 웹앱의 폴더 구조를 비개발자가 알아듣게 설명해줘. 공모 데이터를 바꾸려면 어느 파일을, 디자인을 바꾸려면 어느 파일을 고치면 되는지도 알려줘." compact />
+
+</DeepDive>
+
+<DeepDive title="localhost와 배포 주소, 무엇이 다른가">
+
+| | localhost (내 PC) | ….vercel.app (배포) |
+| --- | --- | --- |
+| 누가 보나 | 나만 | 주소를 아는 누구나 |
+| 언제 바뀌나 | 파일을 저장하는 즉시 | 커밋·푸시 후 1~2분 |
+| 용도 | 고치면서 확인 | 동료와 공유 |
+| 꺼지면 | 내 PC나 개발 서버를 끄면 안 열림 | 항상 열림 |
+
+그래서 순서는 언제나 **localhost에서 확인 → 커밋·푸시 → 배포 주소에서 다시 확인**입니다.
+
+</DeepDive>
+
+## 2일차 혼자서 처음부터 배포
+
+수업 때는 강사와 함께 했으니, 이번에는 4회차 완성본으로 **혼자 처음부터 끝까지** 해 봅니다.
+
+<Lab session={4.5} title="미션 1 · 완성본을 내 주소로 배포" level="필수" minutes={25}>
+<Step id="m1-1" title="압축 풀고 내 PC에서 실행">
+<p><code>session4-grant-board.zip</code>을 압축 풀어 나온 <code>grant-board</code> 폴더를 Claude Code에서 엽니다.</p>
+<PromptCard title="실행하기" text="이 프로젝트에 필요한 부품을 설치하고 내 PC에서 실행해서 브라우저로 볼 수 있게 해줘." compact />
+<Expected>{`
+✓ npm install 완료
+● 개발 서버 실행 중 → http://localhost:3000
+`}</Expected>
+</Step>
+<Step id="m1-2" title="GitHub 비공개 저장소로 올리기">
+<PromptCard title="저장소 만들고 올리기" text="이 폴더를 Git 저장소로 만들고 첫 커밋한 뒤, GitHub에 'my-grant-board'라는 비공개 저장소를 만들어 푸시해줘. 끝나면 주소를 알려줘." compact />
+</Step>
+<Step id="m1-3" title="Vercel에서 Import → Deploy">
+<p><a href="https://vercel.com/new" target="_blank">vercel.com/new</a>에서 방금 저장소를 <b>Import</b> → 설정은 그대로 → <b>Deploy</b>. 1~2분 뒤 나오는 주소를 휴대폰으로 열어 보세요.</p>
+<Trouble>
+<Issue q="Import 목록에 저장소가 안 보여요">Vercel이 GitHub 저장소에 접근할 권한이 없는 경우입니다. 목록 아래 <b>Adjust GitHub App Permissions</b>에서 해당 저장소를 허용하세요.</Issue>
+<Issue q="빌드가 실패했어요">Vercel의 빨간 에러 부분을 복사해 Claude Code에 붙여 넣고 "고치고 다시 푸시해줘"라고 하세요.</Issue>
+</Trouble>
+</Step>
+</Lab>
+
+## 3일차 내 데이터로 채우기
+
+1회차에서 공고 PDF로 만든 마감 일정표를 공모 보드 데이터로 옮깁니다. **1회차의 결과물이 4회차의 재료가 되는** 경험입니다.
+
+<Lab session={4.5} title="미션 2 · 1회차 마감 일정표 → 공모 보드" level="필수" minutes={25}>
+<Step id="m2-1" title="일정표 파일을 보드 폴더로 복사">
+<p><code>공모_마감일정.md</code>를 <code>grant-board</code> 폴더 안에 복사해 넣습니다. 없다면 1회차 실습 자료 폴더를 Claude Code로 열어 1회차의 "공모 마감 일정표" 프롬프트로 먼저 만드세요.</p>
+</Step>
+<Step id="m2-2" title="데이터 바꾸기">
+<PromptCard
+  title="일정표로 데이터 교체"
+  text="@공모_마감일정.md 의 공고들로 data/grants.ts의 데이터를 바꿔줘. 이미 마감이 지난 공고도 넣되 표시만 다르게 하고, 담당자는 '연구지원팀'으로 넣어줘. localhost에서 확인할 수 있게 해줘."
+/>
+<Expected>{`
+✓ data/grants.ts 수정 — 공고 6건
+  누리교육진흥원(가상)  디지털 교육 격차 해소 정책연구 공모   2026-10-24
+  한빛에너지(가상)      7차 사외공모 기초연구                 2026-10-30
+  … (지난 공고 1건 포함)
+● localhost:3000에서 확인하세요
+`}</Expected>
+</Step>
+<Step id="m2-3" title="커밋·푸시 후 배포 주소에서 확인">
+<PromptCard id="web-retitle" compact />
+</Step>
+</Lab>
+
+## 4일차 기능 붙이기와 Vercel 대시보드
+
+<Lab session={4.5} title="미션 3 · 기능 세 개 붙이기" level="필수" minutes={20} goal="하나씩 시키고, 하나 끝날 때마다 localhost에서 확인하고 커밋합니다.">
+<Step id="m3-1" title="검색창">
+<PromptCard title="검색" text="화면 위에 검색창을 넣어서 사업명이나 주관기관으로 공모를 걸러 볼 수 있게 해줘. 다 되면 커밋해줘." compact />
+</Step>
+<Step id="m3-2" title="마감 지난 공모 숨기기">
+<PromptCard title="지난 공모 숨기기" text="'마감 지난 공모 숨기기' 체크박스를 넣어줘. 기본은 숨김으로. 다 되면 커밋해줘." compact />
+</Step>
+<Step id="m3-3" title="이번 주 마감 요약">
+<PromptCard title="상단 요약" text="화면 맨 위에 '이번 주 마감 n건, 이번 달 마감 n건' 요약을 크게 보여줘. 다 되면 커밋하고 푸시해줘." compact />
+</Step>
+</Lab>
+
+<DeepDive title="Vercel 대시보드, 여기만 알면 된다">
+
+| 메뉴 | 위치 | 쓰는 때 |
+| --- | --- | --- |
+| **Deployments** | 프로젝트 상단 탭 | 배포 목록. 푸시할 때마다 한 줄씩 생김. 문제가 생기면 예전 배포를 골라 **Promote**로 되돌릴 수 있음 |
+| **Build Logs** | 배포 하나 클릭 | 빌드 실패 원인. 빨간 줄을 복사해 Claude Code에 |
+| **Domains** | Settings → Domains | 주소 바꾸기 (예: `syu-grant-board.vercel.app`) |
+| **Deployment Protection** | Settings → Deployment Protection | **Vercel Authentication**을 켜면 로그인한 사람만 볼 수 있음 |
+| **Environment Variables** | Settings → Environment Variables | 5·6회차에서 키를 넣는 곳 |
+
+</DeepDive>
+
+<Lab session={4.5} title="미션 4 · 대시보드 둘러보기" level="선택" minutes={10}>
+<Step id="m4-1" title="배포 이력과 로그 찾기">
+<p><b>Deployments</b>에서 미션 3의 푸시로 생긴 배포를 찾아 눌러 보고, <b>Build Logs</b>를 열어 보세요.</p>
+</Step>
+<Step id="m4-2" title="주소 바꾸기 또는 접근 제한">
+<p><b>Settings → Domains</b>에서 기억하기 쉬운 주소로 바꾸거나, <b>Deployment Protection</b>에서 접근 제한을 켜 보세요. 내부용 도구라면 접근 제한을 권합니다.</p>
+</Step>
+</Lab>
+
+## 5일차 5회차 준비
+
+<Lab session={4.5} title="미션 5 · 5회차 준비" level="필수" minutes={10}>
+<Step id="m5-1" title="Supabase 가입">
+<p><a href="https://supabase.com" target="_blank">Supabase</a>에 GitHub 계정으로 가입합니다. 무료 프로젝트는 2개까지이니 이미 쓰는 프로젝트가 있다면 정리해 두세요.</p>
+</Step>
+<Step id="m5-2" title="엑셀을 테이블로 생각해 보기">
+<Assignment id="s45-table" title="공모 보드에 더 넣고 싶은 항목" placeholder="예) 지원 규모, 공고 원문 링크, 기관 승인 요청일">
+  5회차에는 공모 데이터를 데이터베이스로 옮깁니다. 지금 보드에 없지만 있었으면 하는 항목을 3개 적어 오세요. 5.5에서 직접 추가합니다.
+</Assignment>
+</Step>
+</Lab>
+
+<Checklist list="prep-5" />
+
+## 스스로 점검
+
+<Checklist list="self-4" />
+
+<Assignment id="q-4-5" title="다음 수업에서 물어볼 것" placeholder="예) 공모 데이터를 화면에서 바로 추가하려면 무엇이 필요한가요?" />
+
+<NextSession n={4.5} />

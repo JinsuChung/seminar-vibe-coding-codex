@@ -79,7 +79,7 @@ export function PresentButton() {
     <button
       type="button"
       onClick={() => (state.on ? exit() : enter())}
-      className="inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-medium text-fd-muted-foreground hover:bg-fd-accent hover:text-fd-foreground"
+      className="inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border px-2.5 py-1 text-xs font-medium text-fd-muted-foreground hover:bg-fd-accent hover:text-fd-foreground"
       title="발표 모드 (P)"
     >
       <Presentation className="size-3.5" />

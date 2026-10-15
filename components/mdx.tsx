@@ -17,6 +17,8 @@ import {
   NextSession,
   KeyPoints,
   Analogy,
+  SelfStudyHeader,
+  DeepDive,
 } from '@/components/session/session';
 import { Term } from '@/components/ui/term';
 import { OSBlock, OSOnly, Kbd } from '@/components/ui/os';
@@ -50,6 +52,8 @@ export function getMDXComponents(components?: MDXComponents) {
     NextSession,
     KeyPoints,
     Analogy,
+    SelfStudyHeader,
+    DeepDive,
     Term,
     OSBlock,
     OSOnly,

@@ -119,3 +119,111 @@ export const sessions: SessionMeta[] = [
 ];
 
 export const getSession = (n: number) => sessions.find((s) => s.n === n)!;
+
+/** 회차 사이 혼자 공부하는 과정 (n.5) */
+export type SelfStudyMeta = {
+  n: number;
+  slug: string;
+  title: string;
+  short: string;
+  minutes: number;
+  focus: string;
+  plan: { day: string; minutes: number; what: string; href: string }[];
+};
+
+export const selfStudies: SelfStudyMeta[] = [
+  {
+    n: 1.5,
+    slug: '/sessions/self-1',
+    title: '1.5 · 혼자 해 보기: Claude Code와 친해지기',
+    short: 'Claude Code와 친해지기',
+    minutes: 90,
+    focus: '지시하는 법, 계획 보기, 되돌리기를 손에 익히고 문서 작성도 맡겨 봅니다.',
+    plan: [
+      { day: '1일차', minutes: 15, what: '1회차 복습과 Claude Code 화면 다시 보기', href: '#1일차-복습과-화면-익히기' },
+      { day: '2일차', minutes: 20, what: '좋은 지시 vs 아쉬운 지시 직접 비교', href: '#2일차-지시를-바꾸면-결과가-바뀐다' },
+      { day: '3일차', minutes: 20, what: '플랜 모드와 되돌리기 연습', href: '#3일차-계획-보기와-되돌리기' },
+      { day: '4일차', minutes: 20, what: '문서 작성 맡기기 (안내문·보고서)', href: '#4일차-문서도-맡겨-보기' },
+      { day: '5일차', minutes: 15, what: '내 업무 반복 작업 구체화, 2회차 준비', href: '#5일차-내-업무-정리와-2회차-준비' },
+    ],
+  },
+  {
+    n: 2.5,
+    slug: '/sessions/self-2',
+    title: '2.5 · 혼자 해 보기: 엑셀·파일 도구 더 만들기',
+    short: '엑셀·파일 도구 더 만들기',
+    minutes: 90,
+    focus: '검증 기준을 스스로 쓰고, 2회차와 다른 엑셀 작업 4가지를 혼자 만들어 봅니다.',
+    plan: [
+      { day: '1일차', minutes: 15, what: '2회차 복습, AI가 엑셀을 다루는 원리', href: '#1일차-ai는-엑셀을-어떻게-다루나' },
+      { day: '2일차', minutes: 20, what: '이상값 찾기와 검증 기준 쓰기', href: '#2일차-검증-기준을-내가-쓴다' },
+      { day: '3일차', minutes: 20, what: '집계표·추이 보고서 만들기', href: '#3일차-집계와-보고서' },
+      { day: '4일차', minutes: 25, what: '내 업무 도구 기획서 완성과 첫 버전', href: '#4일차-내-업무-도구-첫-버전' },
+      { day: '5일차', minutes: 10, what: 'CLAUDE.md 다듬기, 3회차 준비', href: '#5일차-claudemd-다듬기와-3회차-준비' },
+    ],
+  },
+  {
+    n: 3.5,
+    slug: '/sessions/self-3',
+    title: '3.5 · 혼자 해 보기: 커밋하는 습관 들이기',
+    short: '커밋하는 습관 들이기',
+    minutes: 80,
+    focus: '내 도구를 저장소로 관리하고, 되돌리는 세 가지 방법과 GitHub 화면에 익숙해집니다.',
+    plan: [
+      { day: '1일차', minutes: 15, what: '3회차 복습, Git이 기록하는 것', href: '#1일차-git은-무엇을-기록하나' },
+      { day: '2일차', minutes: 20, what: '2.5 도구들을 저장소로, 커밋 쌓기', href: '#2일차-커밋을-쌓아-보자' },
+      { day: '3일차', minutes: 20, what: '되돌리는 세 가지 방법', href: '#3일차-되돌리는-세-가지-방법' },
+      { day: '4일차', minutes: 15, what: 'README 쓰기와 GitHub 화면 둘러보기', href: '#4일차-readme와-github-화면' },
+      { day: '5일차', minutes: 10, what: '4회차 준비 (Node.js, Vercel)', href: '#5일차-4회차-준비' },
+    ],
+  },
+  {
+    n: 4.5,
+    slug: '/sessions/self-4',
+    title: '4.5 · 혼자 해 보기: 공모 보드 키우기',
+    short: '공모 보드 키우기',
+    minutes: 100,
+    focus: '혼자 배포를 한 번 더 해 보고, 1회차에 만든 마감 일정표로 보드를 채우고 기능을 붙입니다.',
+    plan: [
+      { day: '1일차', minutes: 15, what: '4회차 복습, 웹앱의 구조', href: '#1일차-웹앱은-어떻게-생겼나' },
+      { day: '2일차', minutes: 25, what: '완성본으로 혼자 처음부터 배포', href: '#2일차-혼자서-처음부터-배포' },
+      { day: '3일차', minutes: 25, what: '1회차 마감 일정표로 보드 채우기', href: '#3일차-내-데이터로-채우기' },
+      { day: '4일차', minutes: 25, what: '기능 3개 붙이기, Vercel 대시보드 익히기', href: '#4일차-기능-붙이기와-vercel-대시보드' },
+      { day: '5일차', minutes: 10, what: '5회차 준비 (Supabase)', href: '#5일차-5회차-준비' },
+    ],
+  },
+  {
+    n: 5.5,
+    slug: '/sessions/self-5',
+    title: '5.5 · 혼자 해 보기: 데이터와 보안 손에 익히기',
+    short: '데이터와 보안 손에 익히기',
+    minutes: 100,
+    focus: 'SQL과 RLS 정책을 읽는 눈을 기르고, 컬럼 추가·권한 시험·내보내기를 혼자 해 봅니다.',
+    plan: [
+      { day: '1일차', minutes: 15, what: '5회차 복습, SQL 네 문장 읽기', href: '#1일차-sql-네-문장만-읽자' },
+      { day: '2일차', minutes: 20, what: 'RLS 정책 읽고 두 계정으로 시험', href: '#2일차-rls를-직접-시험한다' },
+      { day: '3일차', minutes: 25, what: '컬럼 추가하고 화면까지 반영', href: '#3일차-항목-하나-추가하기' },
+      { day: '4일차', minutes: 25, what: '질문으로 데이터 보기, CSV 내보내기', href: '#4일차-데이터에-질문하기' },
+      { day: '5일차', minutes: 15, what: '보안 점검, 6회차 준비 (API 키·한도)', href: '#5일차-보안-점검과-6회차-준비' },
+    ],
+  },
+  {
+    n: 6.5,
+    slug: '/sessions/self-6',
+    title: '6.5 · 과정 이후 4주 로드맵',
+    short: '과정 이후 4주 로드맵',
+    minutes: 120,
+    focus: '수료 후 4주 동안 내 업무 도구 하나를 실제로 완성하고, 팀과 나누는 단계까지 갑니다.',
+    plan: [
+      { day: '1주차', minutes: 30, what: '도구 하나 고르고 기획서 쓰기', href: '#1주차-하나만-고른다' },
+      { day: '2주차', minutes: 40, what: '첫 버전 만들고 가상 데이터로 검증', href: '#2주차-첫-버전과-검증' },
+      { day: '3주차', minutes: 30, what: '동료 1명에게 써 보게 하고 고치기', href: '#3주차-동료에게-써-보게-하기' },
+      { day: '4주차', minutes: 20, what: '운영 판단과 팀 공유', href: '#4주차-계속-쓸지-정하기' },
+    ],
+  },
+];
+
+export const getSelfStudy = (n: number) => selfStudies.find((s) => s.n === n);
+
+/** 진도 합계에 쓰는 모든 과정 번호 (회차 + n.5) */
+export const allTracks = [...sessions.map((s) => s.n), ...selfStudies.map((s) => s.n)].sort((a, b) => a - b);

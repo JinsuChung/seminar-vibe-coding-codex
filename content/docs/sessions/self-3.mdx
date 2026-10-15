@@ -1,0 +1,168 @@
+---
+title: "3.5 · 혼자 해 보기: 커밋하는 습관 들이기"
+description: "3회차와 4회차 사이. 2.5에서 만든 도구를 저장소로 관리하고, 되돌리는 세 가지 방법과 GitHub 화면에 익숙해집니다."
+---
+
+<SelfStudyHeader n={3.5} />
+
+<Callout title="준비물">
+  2.5에서 만든 `추가예시` 결과물과 `내도구_연습` 폴더. 없으면 [자료실](/downloads)의 **출장비 계산기**(3회차 시작 자료)로 해도 됩니다.
+</Callout>
+
+## 1일차 Git은 무엇을 기록하나
+
+<KeyPoints
+  items={[
+    '커밋은 세이브 포인트, 푸시는 클라우드 백업. 명령어는 Claude가, 판단은 내가.',
+    '저장소는 기본 비공개(private). 업무 자료가 든 저장소를 공개로 만들지 않는다.',
+    '.env 같은 비밀 파일은 처음부터 .gitignore에. 실수로 올렸다면 키를 재발급한다.',
+  ]}
+/>
+
+<DeepDive title="커밋 하나에 담기는 것">
+
+커밋은 "파일 복사본"이 아니라 **바뀐 부분 + 누가 + 언제 + 왜**를 묶은 기록입니다.
+
+| 담기는 것 | 예 | 행정 비유 |
+| --- | --- | --- |
+| 바뀐 내용 | `출장비계산기.html` 3줄 수정 | 수정 대비표 |
+| 메시지 | "광역시 숙박 상한 8만 원으로 변경" | 변경 사유 |
+| 작성자·시각 | 홍길동, 2026-10-22 14:05 | 기안자·기안일 |
+| 이전 커밋 연결 | 바로 앞 세이브 포인트 | 문서 이력 번호 |
+
+그래서 파일 이름을 `최종_수정_v3`처럼 바꿀 필요가 없습니다. 파일은 하나로 두고, **이력은 Git이** 관리합니다.
+
+</DeepDive>
+
+<DeepDive title="얼마나 자주 커밋할까">
+
+**"잘 돌아갈 때마다, 기능 하나마다"**가 기준입니다.
+
+| 너무 드묾 | 적당함 | 너무 잦음 |
+| --- | --- | --- |
+| 하루 일을 커밋 하나에 | 기능 하나 완성 = 커밋 하나 | 글자 하나 고칠 때마다 |
+| 되돌릴 때 좋은 부분까지 같이 사라짐 | 원하는 지점으로 정확히 돌아감 | 이력이 너무 길어 찾기 어려움 |
+
+CLAUDE.md에 "기능 하나를 마치면 한글 메시지로 커밋"이라고 적어 두면 Claude가 알아서 챙깁니다.
+
+</DeepDive>
+
+<Sim name="commit-timeline" />
+
+## 2일차 커밋을 쌓아 보자
+
+<Lab session={3.5} title="미션 1 · 내 도구를 저장소로" level="필수" minutes={20} goal="커밋 5개를 쌓는 것이 목표입니다.">
+<Step id="m1-1" title="저장소 만들기와 첫 커밋">
+<p><code>내도구_연습</code> 폴더(또는 출장비 계산기)를 Claude Code에서 엽니다.</p>
+<PromptCard id="git-init" />
+</Step>
+<Step id="m1-2" title="CLAUDE.md에 커밋 규칙 넣기">
+<PromptCard title="커밋 규칙 추가" text="CLAUDE.md에 '기능 하나를 마치면 한글 메시지로 커밋한다'는 규칙을 추가하고 커밋해줘." />
+</Step>
+<Step id="m1-3" title="기능 세 개를 차례로 추가하기">
+<p>하나씩 시키고, 끝날 때마다 커밋됐는지 확인합니다. 내 도구에 맞는 기능으로 바꿔도 됩니다.</p>
+<PromptCard title="기능 1" text="결과 파일 이름에 오늘 날짜(YYYY-MM-DD)를 붙여줘." compact />
+<PromptCard title="기능 2" text="처리가 끝나면 처리한 파일 수와 걸린 시간을 알려 주는 한 줄 요약을 보여줘." compact />
+<PromptCard title="기능 3" text="사용법.txt를 만들어 처음 쓰는 사람도 따라 할 수 있게 3단계로 적어줘." compact />
+</Step>
+<Step id="m1-4" title="이력 확인">
+<PromptCard id="git-log" compact />
+<Expected>{`
+  날짜              메시지
+  2026-10-23 10:12  사용법.txt 추가
+  2026-10-23 10:05  처리 결과 요약 출력
+  2026-10-23 09:58  결과 파일명에 날짜 추가
+  2026-10-23 09:51  CLAUDE.md에 커밋 규칙 추가
+  2026-10-23 09:45  첫 버전
+`}</Expected>
+</Step>
+</Lab>
+
+## 3일차 되돌리는 세 가지 방법
+
+<DeepDive title="상황별로 다른 되돌리기">
+
+| 상황 | 방법 | 이렇게 말하기 |
+| --- | --- | --- |
+| 방금 대화에서 한 작업이 마음에 안 듦 | Claude Code 되돌리기 (<Kbd keys="esc" /> 두 번, `/rewind`) | — |
+| 며칠 전 잘되던 상태로 통째로 | 커밋으로 되돌리기 | "어제 커밋 상태로 되돌려줘. 지금 상태는 따로 보관하고" |
+| 다른 건 두고 파일 하나만 | 특정 파일만 되돌리기 | "사용법.txt만 마지막 커밋 상태로 되돌려줘" |
+
+"지금 상태는 따로 보관하고"를 붙이면 되돌린 것을 다시 되돌릴 수도 있습니다.
+
+</DeepDive>
+
+<Lab session={3.5} title="미션 2 · 세 가지 방법 모두 써 보기" level="필수" minutes={20}>
+<Step id="m2-1" title="대화 되돌리기">
+<PromptCard title="망가뜨리기 1" text="사용법.txt를 영어로 바꿔줘." compact />
+<p><Kbd keys="esc" />를 두 번 눌러 이 요청 직전으로 되돌립니다.</p>
+</Step>
+<Step id="m2-2" title="파일 하나만 되돌리기">
+<PromptCard title="망가뜨리기 2" text="사용법.txt를 아주 길게 10단계로 다시 쓰고, 결과 파일명 날짜 형식도 YYYYMMDD로 바꿔줘. 커밋은 하지 마." compact />
+<PromptCard title="사용법만 되돌리기" text="사용법.txt만 마지막 커밋 상태로 되돌려줘. 날짜 형식 변경은 그대로 둬." compact />
+</Step>
+<Step id="m2-3" title="커밋으로 통째로 되돌리기">
+<PromptCard id="git-restore" compact />
+<p>날짜 형식 변경까지 사라지고 마지막 커밋 상태로 돌아왔는지 확인하세요.</p>
+<Trouble>
+<Issue q="되돌리기 전에 저장하라고(stash) 나와요">커밋하지 않은 변경이 있다는 뜻입니다. "지금 변경은 따로 보관(stash)하고 되돌려줘"라고 하면 됩니다.</Issue>
+</Trouble>
+</Step>
+</Lab>
+
+## 4일차 README와 GitHub 화면
+
+<Lab session={3.5} title="미션 3 · GitHub에 올리고 화면 익히기" level="필수" minutes={15}>
+<Step id="m3-1" title="README 쓰기">
+<PromptCard
+  title="README 쓰기"
+  text="이 도구를 처음 보는 동료를 위해 README.md를 써줘. 무엇을 하는 도구인지, 준비물, 사용 방법 3단계, 주의할 점(실제 개인정보 파일 금지)을 넣고 커밋해줘."
+/>
+</Step>
+<Step id="m3-2" title="비공개 저장소로 올리기">
+<PromptCard id="git-push-new" compact />
+</Step>
+<Step id="m3-3" title="GitHub 웹 화면 둘러보기">
+
+알려 준 주소를 브라우저로 열고 아래를 찾아보세요.
+
+| 화면 | 위치 | 볼 것 |
+| --- | --- | --- |
+| 첫 화면 | 저장소 주소 | 파일 목록 아래에 README가 보기 좋게 표시됨 |
+| **Private** 표시 | 저장소 이름 옆 | 비공개인지 확인 |
+| 커밋 이력 | 파일 목록 위의 시계 아이콘 + "commits" | 미션 1에서 쌓은 커밋들 |
+| 변경 내용 | 커밋 하나 클릭 | 초록(추가)·빨강(삭제)으로 바뀐 줄 |
+| 설정 | **Settings** 탭 | 공개 범위, 협업자 초대 |
+
+</Step>
+</Lab>
+
+<Lab session={3.5} title="도전 · 브랜치에서 실험하기" level="심화" minutes={10}>
+<Step id="m4-1" title="브랜치 만들어 실험 후 합치거나 버리기">
+<PromptCard id="git-branch-try" />
+</Step>
+</Lab>
+
+## 5일차 4회차 준비
+
+<Lab session={3.5} title="미션 4 · 4회차 준비" level="필수" minutes={10}>
+<Step id="m5-1" title="Node.js 설치 확인">
+<PromptCard id="node-check" compact />
+</Step>
+<Step id="m5-2" title="Vercel 가입">
+<p><a href="https://vercel.com/signup" target="_blank">Vercel</a>에서 <b>Continue with GitHub</b>로 가입합니다. 4회차에 GitHub 저장소를 바로 연결할 수 있습니다.</p>
+</Step>
+<Step id="m5-3" title="1.5에서 만든 공모 마감 일정표 찾아 두기">
+<p>1.5의 도전 미션에서 만든 <code>공모_마감일정.md</code>(또는 1회차 선택 실습 결과)를 찾아 두세요. 4.5에서 공모 보드를 이 데이터로 채웁니다.</p>
+</Step>
+</Lab>
+
+<Checklist list="prep-4" />
+
+## 스스로 점검
+
+<Checklist list="self-3" />
+
+<Assignment id="q-3-5" title="다음 수업에서 물어볼 것" placeholder="예) 동료와 같은 저장소를 같이 쓰려면 어떻게 하나요?" />
+
+<NextSession n={3.5} />

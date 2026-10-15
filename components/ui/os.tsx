@@ -25,7 +25,7 @@ export function OSSwitch({ className }: { className?: string }) {
     <div
       role="radiogroup"
       aria-label="운영체제 선택"
-      className={cn('inline-flex rounded-full border bg-fd-muted p-0.5 text-xs font-medium', className)}
+      className={cn('inline-flex shrink-0 whitespace-nowrap rounded-full border bg-fd-muted p-0.5 text-xs font-medium', className)}
     >
       {(
         [

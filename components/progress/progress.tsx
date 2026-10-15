@@ -1,6 +1,7 @@
 'use client';
 import { readStored, useAnyStoredChange, useHydrated } from '@/lib/storage';
 import { cn } from '@/lib/cn';
+import { allTracks } from '@/content/data/sessions';
 
 export function getSessionProgress(n: number) {
   const done = readStored<string[]>(`lab:${n}`, []).length;
@@ -23,8 +24,8 @@ export function useOverallProgress(count = 6) {
   if (!hydrated) return { done: 0, total: 0, sessionsDone: 0 };
   let done = 0;
   let total = 0;
-  for (let i = 1; i <= count; i++) {
-    const p = getSessionProgress(i);
+  for (const t of allTracks) {
+    const p = getSessionProgress(t);
     done += p.done;
     total += p.total;
   }
