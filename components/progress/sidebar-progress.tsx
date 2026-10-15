@@ -19,7 +19,7 @@ export function SidebarProgress() {
         </div>
         <ProgressBar pct={pct} className="mt-2" />
         {last ? (
-          <Link href={last.path} className="mt-2.5 flex items-center gap-1 text-xs font-medium text-fd-primary hover:underline">
+          <Link href={last.path} data-sidebar-extra="" className="mt-2.5 flex items-center gap-1 text-xs font-medium text-fd-primary hover:underline">
             <span className="truncate">이어서: {last.title}</span>
             <ArrowRight className="size-3 shrink-0" />
           </Link>

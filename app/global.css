@@ -120,6 +120,28 @@ pre,
   scroll-margin-top: 5rem;
 }
 
+/* 사이드바 위계: 회차는 굵게, 회차 사이 '혼자 해 보기'(n.5)는 작게 들여서 딸린 항목으로 */
+#nd-sidebar a[href^='/sessions/']:not([data-sidebar-extra]):not([href^='/sessions/self-']) {
+  font-weight: 600;
+  color: var(--color-fd-foreground);
+}
+#nd-sidebar a[href^='/sessions/']:not([data-sidebar-extra]):not([href^='/sessions/self-'])[data-active='true'] {
+  color: var(--color-fd-primary);
+}
+#nd-sidebar a[href^='/sessions/self-']:not([data-sidebar-extra]) {
+  margin-inline-start: calc(3 * var(--spacing));
+  padding-inline-start: calc(3 * var(--spacing)) !important;
+  padding-block: calc(1.25 * var(--spacing));
+  border-inline-start: 2px solid var(--color-fd-border);
+  border-radius: 0 0.5rem 0.5rem 0;
+  font-size: 0.78rem;
+  line-height: 1.35;
+  letter-spacing: -0.015em;
+}
+#nd-sidebar a[href^='/sessions/self-']:not([data-sidebar-extra])[data-active='true'] {
+  border-inline-start-color: var(--color-fd-primary);
+}
+
 /* 점선 밑줄 용어 */
 .term {
   text-decoration: underline dotted;
