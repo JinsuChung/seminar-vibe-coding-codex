@@ -26,7 +26,7 @@ export const sessions: SessionMeta[] = [
       '챗봇(웹 채팅)과 에이전트(Claude Code)의 차이를 안다',
       'Claude Code를 설치하고 내 폴더에서 첫 작업을 시킨다',
     ],
-    output: 'Claude Code 설치, 내 폴더 파악 보고서',
+    output: 'Claude Code 설치, 산단 공유폴더 팀별 정리와 현황 보고서',
     tools: ['Claude Code 데스크톱 앱'],
     color: '#0b4a9e',
   },
