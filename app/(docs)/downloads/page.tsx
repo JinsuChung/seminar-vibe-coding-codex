@@ -8,7 +8,7 @@ import { gitConfig } from '@/lib/shared';
 export const metadata: Metadata = { title: '자료실', description: '실습 자료, 교안 PDF, 회차별 완성본, 진도 옮기기.' };
 
 const files = [
-  { name: '1회차 실습 자료', file: '/downloads/session1-practice.zip', desc: '뒤섞인 파일 30여 개 (가상 협약서 PDF, 집행내역 엑셀, 사진, 문서)', icon: FileArchive },
+  { name: '1회차 실습 자료', file: '/downloads/session1-practice.zip', desc: '정리 안 된 산학협력단 공유폴더: 연구지원·기술사업화·재무회계·구매자산·학술활동지원·창업보육센터·RISE 파일 40개 (공고 PDF, 엑셀, 워드, 사진)', icon: FileArchive },
   { name: '2회차 실습 자료', file: '/downloads/session2-practice.zip', desc: '집행내역 엑셀 10개(양식 조금씩 다름), 증빙 파일 20개, 증빙목록, 협약서 PDF', icon: FileArchive },
   { name: '3회차 시작 자료 · 출장비 계산기', file: '/downloads/session3-expense-calculator.zip', desc: '2회차 실습 2-3의 완성본. 2회차 결과물이 없으면 이것으로 시작', icon: FileArchive },
   { name: '4회차 완성본 · 공모 D-day 보드', file: '/downloads/session4-grant-board.zip', desc: 'Next.js 공모 보드 (가상 데이터 10건). 5회차를 이것으로 시작할 수 있어요', icon: FileArchive },
@@ -58,8 +58,8 @@ export default function Page() {
         </a>
       </div>
 
-      <Callout type="info" title="압축 풀기">
-        Windows 기본 압축 풀기에서 한글 파일명이 깨지면 반디집 같은 압축 프로그램으로 다시 풀어 보세요. 압축을 푼 폴더를 Claude Code에서 열면 됩니다.
+      <Callout type="info" title="압축 풀기 (Windows)">
+        zip 파일을 오른쪽 클릭 → <b>모두 압축 풀기</b>를 누르세요. 한국어 Windows 기본 압축 풀기에서 한글 파일명이 깨지지 않게 만들었고, 반디집·7-Zip·macOS에서도 정상으로 보입니다. 압축을 푼 폴더를 Claude Code에서 열면 됩니다. zip 안에서 파일을 바로 열지 말고 꼭 압축을 먼저 푸세요.
       </Callout>
 
       <h2 id="진도-옮기기">진도 옮기기</h2>

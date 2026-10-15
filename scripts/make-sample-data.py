@@ -13,7 +13,9 @@ PDF 한글 글꼴: macOS의 AppleGothic(없으면 FONT_PATH를 바꾸세요)
 import io
 import random
 import shutil
+import struct
 import zipfile
+import zlib
 from datetime import date, datetime, timedelta
 from pathlib import Path
 
@@ -104,7 +106,7 @@ def docx_file(path: Path, title: str, paras: list[str]):
 
 def text(path: Path, body: str):
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(body.strip() + "\n\n" + NOTICE + "\n", encoding="utf-8")
+    path.write_text(body.strip() + "\n\n" + NOTICE + "\n", encoding="utf-8-sig")  # BOM: 오래된 메모장에서도 한글이 안 깨짐
 
 
 def expense_rows(seed: int, n: int = 12):
@@ -134,29 +136,85 @@ def contract_lines(i: int, agency: str):
 
 
 def session1(base: Path):
-    for i, ag in enumerate(AGENCIES):
-        _, _, _, lines = contract_lines(i, ag)
-        pdf(base / f"협약서_{ag}.pdf", "공동연구 협약서 (요약본)", lines)
-    for i, p in enumerate(PROJECTS):
+    """1회차: 정리 안 된 산학협력단 공유폴더 (팀 이름은 공개 업무 안내 참고, 내용은 모두 가상)"""
+    # 연구지원팀 — 교외 연구과제 공모 공고 (파일명이 제각각, 하나는 이름만 봐서는 알 수 없음)
+    notices = [
+        ("[미래과학재단] 2027년도 기초연구 신규과제 공모 (~11.14).pdf", "미래과학재단", "2027년도 기초연구 신규과제 공모", "2026-11-14", "과제당 연 5천만 원 이내, 3년", "대학 소속 전임교원"),
+        ("공고문_한빛에너지_사외공모.pdf", "한빛에너지(가상)", "2026년 7차 사외공모 기초연구 수행기관 모집", "2026-10-30", "과제당 최대 8천만 원", "대학·연구기관"),
+        ("다운로드 (3).pdf", "누리교육진흥원(가상)", "디지털 교육 격차 해소 정책연구 공모", "2026-10-24", "1억 원 이내, 6개월", "대학 연구진 (공동연구 가능)"),
+        ("국제협력_수요조사.pdf", "가상국제협력단", "2027년도 신규 연구과제 수요조사", "2026-11-07", "수요조사 (선정 후 별도 공모)", "누구나 제안 가능"),
+        ("[스포츠과학원] 연구과제 수요조사.pdf", "가상스포츠과학원", "2027년도 연구과제 수요조사", "2026-11-28", "수요조사", "체육·보건 분야 연구자"),
+        ("공모_지난것.pdf", "서울가상산업진흥원", "지역 산학협력 기술개발 지원사업", "2026-10-10", "과제당 4천만 원", "서울 소재 대학과 중소기업 컨소시엄"),
+    ]
+    for fname, agency, title, deadline, budget, who in notices:
+        pdf(base / fname, f"[{agency}] {title}", [
+            f"주관기관: {agency}",
+            f"사업명: {title}",
+            f"접수 마감: {deadline} 18:00 (온라인 접수)",
+            f"지원 규모: {budget}",
+            f"지원 대상: {who}",
+            "제출 서류: 연구계획서, 연구책임자 이력서, 기관 승인서(산학협력단 발급)",
+            "기관 승인: 마감 3일 전까지 산학협력단 연구지원팀에 요청",
+        ])
+    for i, ag in enumerate(["가온테크", "다올소재"]):
+        _, _, _, lines = contract_lines(i + 1, ag)
+        pdf(base / f"연구협약서_{ag}.pdf", "공동연구 협약서 (요약본)", lines)
+    text(base / "간접비 계산 요청.txt", "보낸 사람: 연구책임자(가상)\n과제: R2026-021 직접비 1억 2천만 원\n간접비 비율과 금액을 계산해서 알려 주실 수 있나요? 다음 주 제출입니다.")
+
+    # 기술사업화팀 — 가족회사, 기술이전
+    fam = [[f"주식회사 {AGENCIES[i % 8]}{'' if i < 8 else f' {i // 8 + 1}공장'}", ["제조", "바이오", "소재", "ICT", "식품"][i % 5], 2019 + i % 7, ["일반", "우수"][i % 3 == 0]] for i in range(20)]
+    xlsx(base / "가족회사_현황_2026.xlsx", fam, ["기업명", "업종", "가입연도", "등급"])
+    pdf(base / "기술이전계약_요약_가온테크.pdf", "기술이전 계약 요약 (가상)", [
+        "기술명: 저전력 센서 데이터 압축 기술", "이전 대상: 주식회사 가온테크", "계약일: 2026-09-22",
+        "기술료: 정액 3,000만 원 + 매출의 2%", "담당: 기술사업화팀",
+    ])
+    docx_file(base / "가족회사_가입신청서_라온로보틱스.docx", "가족회사 가입 신청서", ["기업명: 주식회사 라온로보틱스", "업종: 서비스 로봇", "희망 협력 분야: 현장실습, 공동연구", "신청일: 2026-10-08"])
+
+    # 재무회계팀 — 집행내역 (하나는 복사본이 생김)
+    for i in range(5):
         xlsx(base / f"집행내역_과제{i + 1:02d}.xlsx", expense_rows(i), ["집행일", "비목", "적요", "집행금액"])
+    shutil.copy(base / "집행내역_과제03.xlsx", base / "집행내역_과제03 (1).xlsx")
+    budget = [[c, b, int(b * r)] for c, b, r in zip(CATS, [420_000_000, 180_000_000, 95_000_000, 60_000_000, 110_000_000], [0.71, 0.63, 0.48, 0.55, 0.69])]
+    xlsx(base / "9월_예산집행현황.xlsx", budget, ["비목", "예산(원)", "집행(원)"])
+
+    # 구매자산팀
+    docx_file(base / "검수요청서_실험장비.docx", "물품 검수 요청서", ["품명: 정밀 저울 1대", "구매 과제: R2026-014", "납품일: 2026-10-06", "요청: 구매자산팀 검수"])
+    assets = [[f"A-2026-{i + 1:03d}", ["노트북", "모니터", "빔프로젝터", "정밀 저울", "3D 프린터"][i % 5], ["연구지원팀", "창업보육센터", "기술사업화팀"][i % 3], (date(2026, 1, 10) + timedelta(days=17 * i)).isoformat()] for i in range(15)]
+    xlsx(base / "자산목록_2026.xlsx", assets, ["자산번호", "품명", "사용부서", "취득일"])
+
+    # 학술활동지원팀
+    docx_file(base / "학술대회_참가지원_신청서.docx", "학술대회 참가 지원 신청서", ["학술대회: 2026 가상융합학회 추계학술대회", "일정: 2026-11-21", "지원 요청: 등록비, 출장비"])
+    ethics = [[PROFS[i], ["이수", "미이수"][i % 4 == 3], "2026-0" + str(3 + i % 6) + "-15" if i % 4 != 3 else ""] for i in range(10)]
+    xlsx(base / "연구윤리교육_이수현황.xlsx", ethics, ["연구자(가상)", "이수 여부", "이수일"])
+
+    # 창업보육센터
+    tenants = [[f"주식회사 {n}", s, f"{100 + i}호", (date(2025, 3, 1) + timedelta(days=60 * i)).isoformat()] for i, (n, s) in enumerate([("새벽랩", "에듀테크"), ("온길", "헬스케어"), ("숲결", "친환경 소재"), ("다솜펫", "반려동물"), ("빛누리", "AI 비전"), ("한결푸드", "식품")])]
+    xlsx(base / "입주기업_현황.xlsx", tenants, ["기업명", "분야", "호실", "입주일"])
+    docx_file(base / "입주신청서_새솔푸드.docx", "창업보육센터 입주 신청서", ["기업명: 주식회사 새솔푸드", "분야: 스마트팜 식품", "희망 입주일: 2026-12-01"])
+
+    # 서울 RISE — 미래키움(초등 돌봄) 프로그램 사진과 결과 보고
     shots = [
-        ("성과공유회 행사장", datetime(2026, 9, 12, 10, 5), (11, 74, 158)),
-        ("성과공유회 개회사", datetime(2026, 9, 12, 10, 31), (14, 116, 144)),
-        ("성과공유회 발표", datetime(2026, 9, 12, 14, 2), (4, 120, 87)),
-        ("성과공유회 포스터 세션", datetime(2026, 9, 12, 15, 40), (109, 40, 217)),
-        ("성과공유회 단체사진", datetime(2026, 9, 12, 17, 10), (180, 83, 9)),
-        ("기업 방문 미팅", datetime(2026, 10, 2, 11, 0), (190, 18, 60)),
-        ("기업 연구실 견학", datetime(2026, 10, 2, 13, 20), (63, 68, 68)),
-        ("기업 장비 시연", datetime(2026, 10, 2, 14, 45), (0, 40, 85)),
-        ("기업 협약 서명", datetime(2026, 10, 2, 16, 0), (11, 47, 99)),
+        ("초등 방과후 VR 체험", datetime(2026, 9, 18, 15, 10), (11, 74, 158)),
+        ("초등 방과후 로봇 코딩", datetime(2026, 9, 18, 16, 0), (14, 116, 144)),
+        ("반려동물 공감 교육", datetime(2026, 9, 25, 15, 20), (4, 120, 87)),
+        ("드론 날리기 체험", datetime(2026, 9, 25, 16, 30), (109, 40, 217)),
+        ("AI 그림 그리기 수업", datetime(2026, 10, 2, 15, 0), (180, 83, 9)),
+        ("수료식 단체사진", datetime(2026, 10, 2, 17, 0), (190, 18, 60)),
     ]
     for i, (label, t, col) in enumerate(shots):
-        photo(base / f"IMG_{4120 + i}.jpg", label, t, col)
-    docx_file(base / "회의록_0915.docx", "산학협력 실무회의 (2026-09-15)", ["참석: 기획팀, 연구지원팀", "결정: 성과공유회 일정 확정 (9/12 결과 보고 10/1까지)", "할 일: 결과보고서 초안 — 연구지원팀, 9/26"])
-    docx_file(base / "회의록_1002.docx", "기업 방문 결과 회의 (2026-10-02)", ["참석: 대외협력팀", "결정: 라온로보틱스와 협약 갱신 추진", "할 일: 갱신안 검토 — 대외협력팀, 10/16"])
-    docx_file(base / "보고서_9월업무.docx", "9월 업무 보고", ["주요 실적: 성과공유회 개최(참석 120명), 신규 협약 2건", "진행 중: 연구비 정산 3건"])
-    docx_file(base / "안내문_성과공유회.docx", "2026 산학협력 성과공유회 안내", ["일시: 2026-09-12(토) 10:00", "장소: 가상대학교 대강당"])
-    text(base / "메모_할일.txt", "- 협약 만료 목록 정리\n- 집행내역 취합\n- 사진 정리 후 공유 폴더 업로드")
+        photo(base / f"IMG_{5010 + i}.jpg", label, t, col)
+    shutil.copy(base / "IMG_5012.jpg", base / "IMG_5012 복사본.jpg")
+    docx_file(base / "RISE_미래키움_운영결과_9월.docx", "서울 RISE 미래키움 프로그램 9월 운영 결과 (가상)", ["운영 횟수: 4회 (VR, 로봇 코딩, 반려동물 공감, 드론)", "참여 초등학생: 연인원 86명", "만족도: 4.6 / 5.0", "다음 달 계획: AI 그림 수업, 수료식"])
+
+    # 공통 — 회의록, 뉴스레터(최종이 3개!), 메모, 안내
+    docx_file(base / "회의록_1006.docx", "산학협력단 주간회의 (2026-10-06)", ["결정: 10월 뉴스레터는 RISE 미래키움 특집", "할 일: 공모 마감 일정표 정리 — 연구지원팀, 10/10", "할 일: 가족회사 신규 가입 2건 검토 — 기술사업화팀"])
+    docx_file(base / "회의록_1013.docx", "산학협력단 주간회의 (2026-10-13)", ["결정: 공유폴더를 팀별로 정리하기로 함", "할 일: 직원 바이브 코딩 교육 참석 (10/16부터)", "할 일: 9월 예산 집행현황 보고 — 재무회계팀"])
+    nl = ["산학협력단 뉴스레터 10월호", "특집: 서울 RISE 미래키움 — 초등 방과후 프로그램 4회 운영", "기술이전: 저전력 센서 압축 기술 계약 체결", "가족회사: 신규 가입 신청 2건"]
+    docx_file(base / "뉴스레터_10월호_초안.docx", "뉴스레터 10월호 (초안)", nl)
+    docx_file(base / "뉴스레터_10월호_초안_최종.docx", "뉴스레터 10월호 (최종)", nl + ["창업보육센터: 입주기업 6곳 소개"])
+    docx_file(base / "뉴스레터_10월호_초안_최종_수정.docx", "뉴스레터 10월호 (최종 수정)", nl + ["창업보육센터: 입주기업 6곳 소개", "연구윤리: 11월 교육 일정 안내"])
+    text(base / "메모_할일.txt", "- 공유폴더 정리 (팀별로!)\n- 공모 마감 일정표 만들기\n- 뉴스레터 어떤 게 진짜 최종인지 확인\n- 사진 날짜별로 정리")
+    text(base / "실습폴더_안내.txt", "1회차 실습용 '정리 안 된 산학협력단 공유폴더'입니다.\n팀 이름은 삼육대학교 산학협력단의 공개된 업무 안내를 참고했지만,\n파일 내용·기관·기업·인물은 모두 교육용 가상 데이터입니다.\n\n실습 순서는 강의 사이트 1회차 페이지를 따라 하세요.\nhttps://syu-vibe-coding.vercel.app/sessions/1")
 
 
 def session2(base: Path):
@@ -294,12 +352,42 @@ def session6(base: Path):
         text(base / "문의메일" / f"메일_{i + 1:02d}.txt", f"보낸 사람: 가상기업 담당자{i + 1}\n제목: 문의드립니다\n\n{body}")
 
 
+
+class WinZipInfo(zipfile.ZipInfo):
+    """한국어 Windows 탐색기의 기본 압축 풀기는 파일명을 CP949로 읽는다.
+    그래서 파일명은 CP949로 기록하고(UTF-8 플래그 없음),
+    7-Zip·반디집·macOS 등이 읽는 Info-ZIP 유니코드 경로(0x7075)에 UTF-8 이름을 함께 넣는다."""
+
+    def _encodeFilenameFlags(self):
+        try:
+            return self.filename.encode("cp949"), self.flag_bits & ~0x800
+        except UnicodeEncodeError:
+            return self.filename.encode("utf-8"), self.flag_bits | 0x800
+
+
+def add_to_zip(z: zipfile.ZipFile, src: Path, arcname: str):
+    arcname = arcname.replace("\\", "/")
+    zi = WinZipInfo.from_file(src, arcname)
+    zi.__class__ = WinZipInfo
+    zi.compress_type = zipfile.ZIP_DEFLATED
+    try:
+        raw = arcname.encode("cp949")
+        if raw != arcname.encode("utf-8"):
+            utf8 = arcname.encode("utf-8")
+            data = struct.pack("<BI", 1, zlib.crc32(raw)) + utf8
+            zi.extra = struct.pack("<HH", 0x7075, len(data)) + data
+    except UnicodeEncodeError:
+        pass
+    with open(src, "rb") as f:
+        z.writestr(zi, f.read())
+
+
 def zip_dir(src: Path, dest: Path, root_name: str):
     dest.parent.mkdir(parents=True, exist_ok=True)
     with zipfile.ZipFile(dest, "w", zipfile.ZIP_DEFLATED) as z:
         for f in sorted(src.rglob("*")):
             if f.is_file():
-                z.write(f, Path(root_name) / f.relative_to(src))
+                add_to_zip(z, f, str(Path(root_name) / f.relative_to(src)))
 
 
 SAMPLES = ROOT / "samples"
@@ -316,14 +404,14 @@ def zip_sample(src: Path, dest: Path):
             if f.name.startswith(".env") and f.name != ".env.local.example":
                 continue  # 실제 키가 든 파일은 절대 묶지 않는다
             if f.is_file():
-                z.write(f, Path("grant-board") / rel)
+                add_to_zip(z, f, str(Path("grant-board") / rel))
 
 
 def main():
     if BUILD.exists():
         shutil.rmtree(BUILD)
     jobs = [
-        ("session1-practice", "1회차_실습폴더", session1),
+        ("session1-practice", "산단_공유폴더_정리전", session1),
         ("session2-practice", "2회차_실습폴더", session2),
         ("session3-expense-calculator", "출장비계산기", session3),
         ("session6-practice", "6회차_실습자료", session6),
