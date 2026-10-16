@@ -5,10 +5,11 @@
   "scripts": {
     "build": "next build",
     "dev": "next dev",
-    "start": "serve out",
+    "start": "next start",
     "types:check": "next typegen && tsc --noEmit"
   },
   "dependencies": {
+    "@vercel/blob": "^2.8.2",
     "cn": "^0.4.0",
     "fumadocs-core": "16.16.2",
     "fumadocs-mdx": "15.4.6",

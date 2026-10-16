@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { ArrowRight, ClipboardCopy, Presentation, ListChecks, MousePointerClick } from 'lucide-react';
 import { ContinueButton, CourseMap } from '@/components/home/home-client';
 import { SiteUrl } from '@/components/home/site-url';
+import { ClassBoard } from '@/components/class/class-board';
 import { PromptCard } from '@/components/prompt/prompt-card';
 import { examples } from '@/content/data/examples';
 import { prompts } from '@/content/data/prompts';
@@ -57,6 +58,9 @@ export default function HomePage() {
           <p className="mt-6 text-sm text-white/60">강의 · {instructor}</p>
         </div>
       </section>
+
+      {/* 우리 반 진행 현황 */}
+      <ClassBoard />
 
       {/* 과정 지도 */}
       <section className="mx-auto w-full max-w-6xl px-4 py-14 sm:px-6">

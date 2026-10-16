@@ -10,6 +10,7 @@ import { useStored } from '@/lib/storage';
 import { cn } from '@/lib/cn';
 import { CopyButton } from '@/components/prompt/copy-button';
 import { ProgressBar, useSessionProgress } from '@/components/progress/progress';
+import { ClassStat } from '@/components/class/class-board';
 
 /** 회차 머리말: 한 문장, 학습 목표, 진도 */
 export function SessionHeader({ n }: { n: number }) {
@@ -50,6 +51,7 @@ export function SessionHeader({ n }: { n: number }) {
           <p className="mt-2 text-xs text-fd-muted-foreground">
             {p.total ? `${p.done} / ${p.total} 단계` : '실습 단계를 체크하면 표시돼요'}
           </p>
+          <ClassStat track={n} />
         </div>
       </div>
     </div>
@@ -283,6 +285,7 @@ export function SelfStudyHeader({ n }: { n: number }) {
           <p className="mt-2 text-xs text-fd-muted-foreground">
             {p.total ? `${p.done} / ${p.total} 단계` : '미션 단계를 체크하면 표시돼요'}
           </p>
+          <ClassStat track={n} />
         </div>
       </div>
     </div>

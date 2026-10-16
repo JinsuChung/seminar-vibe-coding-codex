@@ -5,6 +5,7 @@ import { useStored } from '@/lib/storage';
 import { OSSwitch } from '@/components/ui/os';
 import { PresentButton } from '@/components/present/present';
 import { ProgressBar, useOverallProgress } from './progress';
+import { MeCard } from '@/components/class/class-board';
 
 export function SidebarProgress() {
   const { done, total, sessionsDone } = useOverallProgress();
@@ -27,6 +28,7 @@ export function SidebarProgress() {
           <p className="mt-2.5 text-xs text-fd-muted-foreground">실습 단계를 완료하면 여기에 쌓여요.</p>
         )}
       </div>
+      <MeCard />
       <div className="flex items-center justify-between gap-2">
         <OSSwitch />
         <PresentButton />

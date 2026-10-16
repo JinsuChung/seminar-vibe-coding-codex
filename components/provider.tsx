@@ -2,6 +2,8 @@
 import SearchDialog from '@/components/search';
 import { RootProvider } from 'fumadocs-ui/provider/next';
 import { type ReactNode } from 'react';
+import { ClassSync } from '@/components/class/class-sync';
+import { JoinDialog } from '@/components/class/join-dialog';
 
 const ko: Record<string, string> = {
   displayName: '한국어',
@@ -44,6 +46,8 @@ export function Provider({ children }: { children: ReactNode }) {
   return (
     <RootProvider search={{ SearchDialog }} i18n={{ locale: 'ko', translations: ko }}>
       {children}
+      <ClassSync />
+      <JoinDialog />
     </RootProvider>
   );
 }
