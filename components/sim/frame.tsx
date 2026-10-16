@@ -71,8 +71,8 @@ export function Btn({
   );
 }
 
-/** Claude Code 창을 흉내 낸 어두운 패널 */
-export function Terminal({ title = 'Claude Code', children, className }: { title?: string; children: ReactNode; className?: string }) {
+/** Codex 터미널 창을 흉내 낸 어두운 패널 */
+export function Terminal({ title = 'Codex', children, className }: { title?: string; children: ReactNode; className?: string }) {
   return (
     <div className={cn('overflow-hidden rounded-xl border border-[#2a3140] bg-[#0f1419] text-[#d6dde6]', className)}>
       <div className="flex items-center gap-1.5 border-b border-[#2a3140] px-3 py-2">

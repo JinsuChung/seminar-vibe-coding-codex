@@ -107,7 +107,7 @@ export function Step({ id, title, children }: { id: string; title: string; child
   );
 }
 
-/** "이렇게 되면 성공" — Claude Code 화면을 흉내 낸 상자 */
+/** "이렇게 되면 성공" — Codex 화면을 흉내 낸 상자 */
 export function Expected({ title = '이렇게 되면 성공', children }: { title?: string; children: ReactNode }) {
   return (
     <div className="not-prose my-3 overflow-hidden rounded-xl border border-[color-mix(in_oklab,var(--color-ok)_35%,transparent)]">

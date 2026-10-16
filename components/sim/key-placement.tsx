@@ -8,7 +8,7 @@ type Zone = 'browser' | 'server';
 const KEYS = [
   { id: 'anon', label: 'Supabase 공개 키 (anon/publishable)', ok: ['browser', 'server'] as Zone[], why: '공개 키는 화면에 들어가도 됩니다. 단, RLS가 켜져 있어야 안전해요.' },
   { id: 'service', label: 'Supabase 비밀 키 (service_role)', ok: ['server'] as Zone[], why: '비밀 키는 RLS를 무시하는 만능 열쇠입니다. 서버에만 두세요.' },
-  { id: 'claude', label: 'Claude API 키', ok: ['server'] as Zone[], why: '브라우저에 두면 누구나 내 키로 과금시킬 수 있습니다. 서버에서만 호출하세요.' },
+  { id: 'openai', label: 'OpenAI API 키', ok: ['server'] as Zone[], why: '브라우저에 두면 누구나 내 키로 과금시킬 수 있습니다. 서버에서만 호출하세요.' },
   { id: 'dbpw', label: '데이터베이스 비밀번호', ok: ['server'] as Zone[], why: 'DB 비밀번호는 서버 환경변수에만, 가능하면 아예 앱에 넣지 않습니다.' },
 ];
 

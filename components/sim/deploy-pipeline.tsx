@@ -7,8 +7,8 @@ import { Btn, SimFrame, Terminal } from './frame';
 type Stage = 'idle' | 'push' | 'github' | 'build' | 'fail' | 'ready';
 
 export function DeployPipeline() {
-  const [title, setTitle] = useState('삼육대 산단 공모 보드');
-  const [live, setLive] = useState('공모 보드');
+  const [title, setTitle] = useState('사내 업무 요청·처리 현황 보드');
+  const [live, setLive] = useState('업무 요청 보드');
   const [stage, setStage] = useState<Stage>('idle');
   const [failMode, setFailMode] = useState(false);
   const [logs, setLogs] = useState<string[]>([]);
@@ -24,18 +24,18 @@ export function DeployPipeline() {
     later(600, () => setStage('github'));
     later(1200, () => {
       setStage('build');
-      setLogs(['Cloning github.com/me/grant-board (main)', 'Installing dependencies…']);
+      setLogs(['Cloning github.com/me/request-board (main)', 'Installing dependencies…']);
     });
     later(2000, () => setLogs((l) => [...l, 'Running "next build"']));
     if (failMode && !fixed) {
       later(2800, () => {
-        setLogs((l) => [...l, "Type error: Property 'deadline' does not exist on type 'Grant'.", 'Error: Command "next build" exited with 1']);
+        setLogs((l) => [...l, "Type error: Property 'dueDate' does not exist on type 'WorkRequest'.", 'Error: Command "next build" exited with 1']);
         setStage('fail');
       });
     } else {
       later(2800, () => setLogs((l) => [...l, '✓ Compiled successfully', '✓ Generating static pages (5/5)']));
       later(3400, () => {
-        setLogs((l) => [...l, 'Deployment ready → https://grant-board.vercel.app']);
+        setLogs((l) => [...l, 'Deployment ready → https://request-board.vercel.app']);
         setStage('ready');
         setLive(title);
       });
@@ -59,7 +59,7 @@ export function DeployPipeline() {
         timers.current.forEach(clearTimeout);
         setStage('idle');
         setLogs([]);
-        setLive('공모 보드');
+        setLive('업무 요청 보드');
       }}
     >
       <div className="flex flex-wrap items-end gap-3">
@@ -115,8 +115,8 @@ export function DeployPipeline() {
           ))}
           {stage === 'fail' && (
             <div className="space-y-2 pt-1 font-sans">
-              <p className="text-[#ffe2a8]">→ 빨간 에러 부분을 복사해 Claude Code에 붙여 넣고 "고치고 다시 푸시해줘"</p>
-              <Btn variant="ok" onClick={() => run(true)}>Claude Code에 붙여 넣고 고치기</Btn>
+              <p className="text-[#ffe2a8]">→ 빨간 에러 부분을 복사해 Codex에 붙여 넣고 "고치고 다시 푸시해줘"</p>
+              <Btn variant="ok" onClick={() => run(true)}>Codex에 붙여 넣고 고치기</Btn>
             </div>
           )}
         </Terminal>
@@ -124,7 +124,7 @@ export function DeployPipeline() {
           <div className="mx-auto mb-2 h-1.5 w-12 rounded-full bg-fd-foreground/30" />
           <div className="rounded-lg bg-[#002855] px-2 py-2 text-center text-xs font-bold text-white">{live}</div>
           <div className="mt-2 space-y-1.5">
-            {['국가R&D 공모 · D-3', '지역혁신 사업 · D-9', '기업 협력과제 · D-21'].map((t, i) => (
+            {['법인카드 한도 조정 · 긴급', '신입사원 계정 발급 · 처리 중', '전시 부스 견적 검토 · 접수'].map((t, i) => (
               <div key={t} className={cn('rounded-md border px-2 py-1 text-[11px]', i === 0 && 'border-[var(--color-danger)] text-[var(--color-danger)]')}>
                 {t}
               </div>

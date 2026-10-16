@@ -10,7 +10,7 @@ export const quizzes: Record<number, Question[]> = {
       q: '"바이브 코딩"이라는 말을 처음 쓴 사람은?',
       options: ['빌 게이츠', '안드레이 카파시', '샘 올트먼', '리누스 토발즈'],
       answer: 1,
-      explain: 'OpenAI 공동창업자 안드레이 카파시가 2025년 2월 X에 처음 썼고, 그해 콜린스 사전 올해의 단어로 뽑혔습니다.',
+      explain: '안드레이 카파시가 대중화한 표현입니다. 연도·선정 이력 같은 세부 사실은 최신 공식 자료를 확인하세요.',
       ref: '#바이브-코딩의-탄생',
     },
     {
@@ -18,14 +18,14 @@ export const quizzes: Record<number, Question[]> = {
       q: '에이전틱 엔지니어링에서 사람이 맡는 역할로 가장 알맞은 것은?',
       options: ['코드를 한 줄씩 직접 입력한다', '요구사항을 정하고, 계획을 검토하고, 결과를 검증한다', 'AI가 하는 일에 관여하지 않는다', 'AI가 만든 결과를 그대로 배포한다'],
       answer: 1,
-      explain: 'AI는 계획·작성·테스트를 하고, 사람은 정의·승인·검증을 맡습니다. 기획서를 쓰고 결재하던 행정 역량이 그대로 쓰입니다.',
+      explain: 'AI는 계획·작성·테스트를 돕고, 사람은 업무 정의·승인·검증을 맡습니다.',
       ref: '#에이전틱-엔지니어링',
     },
     {
       type: 'ox',
-      q: 'Claude Code는 웹 채팅처럼 답만 알려 주고, 파일 저장은 사람이 직접 해야 한다.',
+      q: 'ChatGPT Codex는 웹 채팅처럼 답만 알려 주고, 파일 저장은 사람이 직접 해야 한다.',
       answer: false,
-      explain: 'Claude Code는 에이전트입니다. 내 컴퓨터의 폴더를 직접 열어 보고, 파일을 만들고 고치고, 프로그램을 실행해 결과를 확인합니다.',
+      explain: 'Codex는 작업 폴더의 파일을 읽고 고치며, 명령과 테스트를 실행할 수 있는 코딩 에이전트입니다.',
       ref: '#챗봇과-에이전트는-무엇이-다른가',
     },
     {
@@ -73,10 +73,10 @@ export const quizzes: Record<number, Question[]> = {
     },
     {
       type: 'ox',
-      q: 'CLAUDE.md는 길고 자세할수록 좋다.',
+      q: 'AGENTS.md는 길고 자세할수록 좋다.',
       answer: false,
       explain: '매번 읽히는 파일이라 짧아야 합니다. 길어지면 중요한 규칙이 묻혀서 오히려 안 지켜집니다.',
-      ref: '#claudemd--ai에게-주는-업무-인수인계서',
+      ref: '#agentsmd--ai에게-주는-업무-인수인계서',
     },
     {
       type: 'single',
@@ -110,15 +110,15 @@ export const quizzes: Record<number, Question[]> = {
     {
       type: 'single',
       q: '.gitignore에 꼭 넣어야 하는 파일은?',
-      options: ['README.md', '.env (비밀번호·API 키)', 'index.html', 'CLAUDE.md'],
+      options: ['README.md', '.env (비밀번호·API 키)', 'index.html', 'AGENTS.md'],
       answer: 1,
       explain: '키가 담긴 .env를 GitHub에 올리는 것이 가장 흔한 보안 사고입니다.',
     },
     {
       type: 'ox',
-      q: 'Claude Code의 되돌리기(/rewind)가 있으니 Git은 필요 없다.',
+      q: 'Codex 앱에서 작업을 되돌릴 수 있으니 Git은 필요 없다.',
       answer: false,
-      explain: '공식 문서도 체크포인트는 Git을 대신하지 않는다고 밝힙니다. 명령으로 바뀐 파일이나 다른 사람과의 공유는 Git이 맡습니다.',
+      explain: '앱의 되돌리기와 별개로 Git은 변경 이력, 복구, 협업의 기준점이 됩니다.',
     },
     {
       type: 'single',
@@ -131,7 +131,7 @@ export const quizzes: Record<number, Question[]> = {
       type: 'ox',
       q: '업무 자료가 들어간 저장소는 기본을 비공개(private)로 만든다.',
       answer: true,
-      explain: '공개 저장소는 전 세계 누구나 볼 수 있습니다.',
+      explain: '공개 저장소는 외부에 노출될 수 있으므로 회사 정책과 자료 등급을 먼저 확인합니다.',
     },
     {
       type: 'order',
@@ -157,14 +157,14 @@ export const quizzes: Record<number, Question[]> = {
     },
     {
       type: 'ox',
-      q: 'Vercel 무료(Hobby) 요금제는 어떤 용도로든 제한 없이 쓸 수 있다.',
+      q: 'Vercel 요금제의 허용 용도와 한도는 확인하지 않고 업무에 써도 된다.',
       answer: false,
-      explain: 'Hobby는 비상업·개인 용도로 제한됩니다. 기관의 정식 서비스라면 Pro 요금제나 학교 서버를 검토해야 합니다.',
+      explain: '요금제의 허용 용도와 한도는 바뀔 수 있으므로 운영 전에 Vercel 공식 문서와 회사 정책을 확인해야 합니다.',
     },
     {
       type: 'single',
       q: '배포 빌드가 실패했을 때 가장 먼저 할 일은?',
-      options: ['저장소를 지운다', 'Vercel 에러 로그를 복사해 Claude Code에 붙여 넣는다', '처음부터 다시 만든다', '친구에게 물어본다'],
+      options: ['저장소를 지운다', 'Vercel 에러 로그를 복사해 Codex에 붙여 넣는다', '처음부터 다시 만든다', '원인을 확인하지 않고 재배포한다'],
       answer: 1,
       explain: '에러 로그는 원인이 적힌 단서입니다. 그대로 붙여 넣고 "고치고 다시 푸시해줘"라고 하면 됩니다.',
     },
@@ -177,7 +177,7 @@ export const quizzes: Record<number, Question[]> = {
     {
       type: 'order',
       q: '웹 도구를 동료에게 공유하는 흐름은?',
-      items: ['Claude Code로 만들기', '커밋(Git)', '푸시(GitHub)', '자동 배포(Vercel)'],
+      items: ['ChatGPT Codex로 만들기', '커밋(Git)', '푸시(GitHub)', '자동 배포(Vercel)'],
       explain: '사람이 하는 일은 앞의 두세 단계뿐, 배포는 자동입니다.',
     },
   ],
@@ -217,14 +217,14 @@ export const quizzes: Record<number, Question[]> = {
     },
     {
       type: 'single',
-      q: 'Supabase 무료 프로젝트를 1주일 넘게 안 쓰면?',
-      options: ['삭제된다', '일시정지되어 다시 켜야 한다', '유료로 바뀐다', '아무 일 없다'],
+      q: 'Supabase 무료 플랜의 한도와 비활성 정책은 어떻게 확인해야 하나요?',
+      options: ['예전 블로그만 본다', '공식 가격·정책 문서에서 최신 내용을 확인한다', '항상 같다고 가정한다', 'AI 답변만 믿는다'],
       answer: 1,
-      explain: '수업 간격이 길면 수업 전에 대시보드에서 다시 켜 두세요.',
+      explain: '플랜 한도와 정책은 바뀔 수 있으므로 수업과 운영 전에 공식 문서를 확인합니다.',
     },
     {
       type: 'order',
-      q: '공모 보드를 DB와 연결하는 순서는?',
+      q: '업무 요청 보드를 DB와 연결하는 순서는?',
       items: ['테이블 설계(SQL)', 'SQL Editor에서 실행', '.env.local에 키 넣기', '앱이 DB에서 읽도록 수정', 'Vercel 환경변수 등록 후 재배포'],
       explain: '로컬에서 먼저 확인하고, 마지막에 배포 환경에도 같은 키를 등록합니다.',
     },
@@ -232,10 +232,10 @@ export const quizzes: Record<number, Question[]> = {
   6: [
     {
       type: 'single',
-      q: 'Claude Code와 Claude API의 차이로 맞는 것은?',
-      options: ['둘은 같은 것이다', 'Claude Code는 만드는 AI, Claude API는 내 앱 안에서 일하는 AI', 'Claude API는 무료다', 'Claude Code는 서버에서만 돈다'],
+      q: 'ChatGPT Codex와 OpenAI API의 차이로 맞는 것은?',
+      options: ['둘은 같은 것이다', 'Codex는 앱을 만드는 에이전트이고 OpenAI API는 만든 앱 안의 AI 기능에 쓴다', 'OpenAI API는 항상 무료다', 'Codex는 서버에서만 돈다'],
       answer: 1,
-      explain: 'Claude Code는 구독료, Claude API는 사용한 토큰만큼 따로 과금됩니다.',
+      explain: '제품 구독과 API 사용 요금은 별도일 수 있습니다. 현재 조건은 OpenAI 공식 가격 문서에서 확인하세요.',
     },
     {
       type: 'single',
@@ -246,23 +246,23 @@ export const quizzes: Record<number, Question[]> = {
     },
     {
       type: 'ox',
-      q: 'AI가 공고문에서 뽑은 마감일은 정확하므로 바로 저장해도 된다.',
+      q: 'AI가 업무 요청에서 분류한 우선순위는 정확하므로 바로 저장해도 된다.',
       answer: false,
-      explain: 'AI 결과는 초안입니다. 금액·날짜·수신자처럼 틀리면 안 되는 값은 사람이 확인하고 저장합니다.',
+      explain: 'AI 결과는 초안입니다. 분류·기한·담당 부서는 사람이 확인하고 저장합니다.',
     },
     {
       type: 'single',
       q: '"프롬프트 인젝션"은 무엇인가요?',
       options: ['프롬프트를 빠르게 입력하는 기술', '외부 문서에 숨긴 문장으로 AI를 조종하는 공격', '프롬프트를 저장하는 기능', 'AI 속도를 높이는 설정'],
       answer: 1,
-      explain: '공고문·메일·웹페이지 속 "이전 지시를 무시하라" 같은 문장이 대표적입니다. 외부 문서는 데이터로만 다루고 사람이 확인합니다.',
+      explain: '메일·문서·웹페이지 속 숨은 지시가 대표적입니다. 외부 입력은 데이터로만 다루고 결과를 검증합니다.',
     },
     {
       type: 'single',
-      q: '개인 Pro 계정을 업무에 쓸 때 꼭 확인할 것은?',
-      options: ['화면 테마', '개인정보 설정의 모델 학습 허용 여부', '글꼴 크기', '알림 소리'],
+      q: '개인용 AI 계정을 업무에 쓸 때 꼭 확인할 것은?',
+      options: ['화면 테마', '회사 보안 정책과 데이터 제어 설정', '글꼴 크기', '알림 소리'],
       answer: 1,
-      explain: 'API와 Team·Enterprise 같은 상업용 계정은 기본적으로 학습에 쓰이지 않지만, 개인 계정은 설정을 직접 확인해야 합니다.',
+      explain: '데이터 처리 조건은 제품·계정·설정에 따라 달라질 수 있으므로 회사 정책과 OpenAI 공식 문서를 확인해야 합니다.',
     },
     {
       type: 'ox',
@@ -273,7 +273,7 @@ export const quizzes: Record<number, Question[]> = {
     {
       type: 'single',
       q: '동료가 매일 쓰는 도구가 됐다. 다음 중 가장 먼저 할 일은?',
-      options: ['그냥 계속 쓴다', '기획서·CLAUDE.md·저장소를 팀이 관리할 수 있게 옮기고, 필요하면 정식 도입을 검토한다', '도구를 지운다', '비밀번호를 공유한다'],
+      options: ['그냥 계속 쓴다', '기획서·AGENTS.md·저장소를 팀이 관리할 수 있게 옮기고 정식 도입을 검토한다', '도구를 지운다', '비밀번호를 공유한다'],
       answer: 1,
       explain: '만든 사람이 자리를 비워도 운영될 수 있어야 합니다. 개인정보·장애 대응이 필요하면 전산팀과 협의합니다.',
     },

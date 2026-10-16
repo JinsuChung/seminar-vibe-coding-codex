@@ -1,7 +1,7 @@
 'use client';
 import { useCallback, useEffect, useState } from 'react';
 import type { Session } from '@supabase/supabase-js';
-import { supabase, supabaseConfigured, type Grant } from '@/lib/supabase';
+import { supabase, supabaseConfigured, type RequestItem } from '@/lib/supabase';
 import { ExtractPanel } from '@/components/extract-panel';
 
 function dday(deadline: string) {
@@ -10,17 +10,17 @@ function dday(deadline: string) {
 }
 
 export function Board() {
-  const [grants, setGrants] = useState<Grant[]>([]);
+  const [requests, setRequests] = useState<RequestItem[]>([]);
   const [session, setSession] = useState<Session | null>(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
-  const [draft, setDraft] = useState<Partial<Grant> | undefined>();
+  const [draft, setDraft] = useState<Partial<RequestItem> | undefined>();
 
   // 목록 불러오기 (누구나 읽기 정책)
   const load = useCallback(async () => {
-    const { data, error } = await supabase.from('grants').select('*').order('deadline');
+    const { data, error } = await supabase.from('work_requests').select('*').order('desired_due_date');
     if (error) setError(`목록을 불러오지 못했어요: ${error.message}`);
-    else setGrants(data ?? []);
+    else setRequests(data ?? []);
     setLoading(false);
   }, []);
 
@@ -48,29 +48,29 @@ export function Board() {
     <>
       <AuthPanel session={session} />
       {session && <ExtractPanel session={session} onExtract={setDraft} />}
-      {session && <GrantForm onSaved={load} initial={draft} />}
+      {session && <RequestForm onSaved={load} initial={draft} />}
       {error && <p className="notice error">{error}</p>}
       {loading ? (
         <p className="meta">불러오는 중…</p>
       ) : (
         <div className="grid">
-          {grants.map((g) => {
-            const d = dday(g.deadline);
+          {requests.map((item) => {
+            const d = dday(item.desired_due_date);
             return (
-              <article key={g.id} className={`card ${d >= 0 && d <= 7 ? 'urgent' : ''} ${d < 0 ? 'past' : ''}`}>
-                <div className="dday">{d < 0 ? '마감' : d === 0 ? 'D-DAY' : `D-${d}`}</div>
-                <strong>{g.title}</strong>
-                <div className="meta">
-                  {g.agency ?? '기관 미정'} · 마감 {g.deadline} · 담당 {g.owner ?? '미정'}
-                </div>
+              <article key={item.id} className={`card ${item.priority === '긴급' ? 'urgent' : ''} ${item.status === '완료' ? 'past' : ''}`}>
+                <div className="dday">{item.status} · {d < 0 ? '기한 경과' : d === 0 ? '오늘까지' : `D-${d}`}</div>
+                <strong>{item.title}</strong>
+                <div className="meta">{item.requester_department} → {item.assignee_department} · 우선순위 {item.priority}</div>
+                <div className="meta">요청일 {item.requested_at} · 희망 완료일 {item.desired_due_date}</div>
+                <p>{item.details}</p>
                 {session && (
                   <button
                     className="link"
                     onClick={async () => {
-                      if (!confirm(`"${g.title}"을(를) 삭제할까요?`)) return;
-                      const { error, count } = await supabase.from('grants').delete({ count: 'exact' }).eq('id', g.id);
+                      if (!confirm(`"${item.title}" 요청을 삭제할까요?`)) return;
+                      const { error, count } = await supabase.from('work_requests').delete({ count: 'exact' }).eq('id', item.id);
                       if (error) alert(error.message);
-                      else if (count === 0) alert('본인이 등록한 공모만 삭제할 수 있어요 (RLS 정책).');
+                      else if (count === 0) alert('본인이 등록한 요청만 삭제할 수 있어요 (RLS 정책).');
                       load();
                     }}
                   >
@@ -95,7 +95,7 @@ function AuthPanel({ session }: { session: Session | null }) {
   if (session) {
     return (
       <div className="bar">
-        <span>{session.user.email} 로그인 중 · 공모를 등록할 수 있어요</span>
+        <span>{session.user.email} 로그인 중 · 업무 요청을 등록할 수 있어요</span>
         <button className="secondary" onClick={() => supabase.auth.signOut()}>
           로그아웃
         </button>
@@ -120,9 +120,12 @@ function AuthPanel({ session }: { session: Session | null }) {
   );
 }
 
-/** 공모 등록 폼 (로그인한 직원만 추가 정책) */
-export function GrantForm({ onSaved, initial }: { onSaved: () => void; initial?: Partial<Grant> }) {
-  const [form, setForm] = useState({ title: '', agency: '', deadline: '', owner: '', ...clean(initial) });
+/** 업무 요청 등록 폼 (로그인한 직원만 추가 정책) */
+export function RequestForm({ onSaved, initial }: { onSaved: () => void; initial?: Partial<RequestItem> }) {
+  const [form, setForm] = useState({
+    title: '', requester_department: '', assignee_department: '', priority: '보통', status: '접수',
+    requested_at: new Date().toISOString().slice(0, 10), desired_due_date: '', details: '', ...clean(initial),
+  });
   const [saving, setSaving] = useState(false);
   const [msg, setMsg] = useState('');
 
@@ -138,28 +141,29 @@ export function GrantForm({ onSaved, initial }: { onSaved: () => void; initial?:
       onSubmit={async (e) => {
         e.preventDefault();
         setSaving(true);
-        const { error } = await supabase.from('grants').insert({
-          title: form.title,
-          agency: form.agency || null,
-          deadline: form.deadline,
-          owner: form.owner || null,
-        });
+        const { error } = await supabase.from('work_requests').insert(form);
         setSaving(false);
         if (error) setMsg(`저장 실패: ${error.message}`);
         else {
           setMsg('저장했어요.');
-          setForm({ title: '', agency: '', deadline: '', owner: '' });
+          setForm({ title: '', requester_department: '', assignee_department: '', priority: '보통', status: '접수', requested_at: new Date().toISOString().slice(0, 10), desired_due_date: '', details: '' });
           onSaved();
         }
       }}
     >
-      <strong>공모 등록</strong>
-      <input placeholder="사업명 (필수)" value={form.title} onChange={set('title')} required />
-      <input placeholder="주관기관" value={form.agency} onChange={set('agency')} />
+      <strong>업무 요청 등록</strong>
+      <input placeholder="요청 제목 (필수)" value={form.title} onChange={set('title')} required />
+      <input placeholder="요청 부서" value={form.requester_department} onChange={set('requester_department')} required />
+      <input placeholder="담당 부서" value={form.assignee_department} onChange={set('assignee_department')} required />
+      <input placeholder="우선순위 (긴급/높음/보통/낮음)" value={form.priority} onChange={set('priority')} required />
+      <input placeholder="상태 (접수/검토 중/처리 중/완료)" value={form.status} onChange={set('status')} required />
       <label>
-        마감일 <input type="date" value={form.deadline} onChange={set('deadline')} required />
+        요청일 <input type="date" value={form.requested_at} onChange={set('requested_at')} required />
       </label>
-      <input placeholder="담당자" value={form.owner} onChange={set('owner')} />
+      <label>
+        희망 완료일 <input type="date" value={form.desired_due_date} onChange={set('desired_due_date')} required />
+      </label>
+      <input placeholder="요청 내용" value={form.details} onChange={set('details')} required />
       <button type="submit" disabled={saving}>
         {saving ? '저장 중…' : '저장'}
       </button>
@@ -168,12 +172,16 @@ export function GrantForm({ onSaved, initial }: { onSaved: () => void; initial?:
   );
 }
 
-function clean(g?: Partial<Grant>) {
+function clean(g?: Partial<RequestItem>) {
   if (!g) return {};
   return {
     ...(g.title != null && { title: g.title }),
-    ...(g.agency != null && { agency: g.agency }),
-    ...(g.deadline != null && { deadline: g.deadline }),
-    ...(g.owner != null && { owner: g.owner }),
+    ...(g.requester_department != null && { requester_department: g.requester_department }),
+    ...(g.assignee_department != null && { assignee_department: g.assignee_department }),
+    ...(g.priority != null && { priority: g.priority }),
+    ...(g.status != null && { status: g.status }),
+    ...(g.requested_at != null && { requested_at: g.requested_at }),
+    ...(g.desired_due_date != null && { desired_due_date: g.desired_due_date }),
+    ...(g.details != null && { details: g.details }),
   };
 }

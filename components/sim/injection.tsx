@@ -20,10 +20,10 @@ export function Injection() {
       }}
     >
       <div className="rounded-xl border bg-fd-background p-4 text-sm leading-7">
-        <p className="font-bold">2026년 지역혁신 산학협력 지원사업 공고</p>
+        <p className="font-bold">월간 고객 리포트 자료 요청</p>
         <p>주관기관: 가상혁신진흥원 · 지원규모: 과제당 최대 1억 원</p>
         <p>신청기간: 2026-10-20 ~ <b>2026-11-14 18:00</b></p>
-        <p>지원자격: 대학 산학협력단, 공동연구 기업 1곳 이상 참여 필수</p>
+        <p>담당 부서: 데이터팀 · 희망 완료일: 2026-10-18</p>
         <p
           className={cn(
             'mt-1 rounded transition-colors',
@@ -52,12 +52,12 @@ export function Injection() {
             <p className="mb-2 text-sm font-bold">{mode === 'naive' ? '추출 결과 (오염됨)' : '추출 결과'}</p>
             <dl className="grid grid-cols-[6rem_1fr] gap-y-1 text-sm">
               <dt className="text-fd-muted-foreground">사업명</dt>
-              <dd>지역혁신 산학협력 지원사업</dd>
+              <dd>월간 고객 리포트 자료 요청</dd>
               <dt className="text-fd-muted-foreground">마감일</dt>
               <dd className={cn(mode === 'naive' && 'font-bold text-[var(--color-danger)]')}>{mode === 'naive' ? '2027-12-31' : '2026-11-14'}</dd>
               <dt className="text-fd-muted-foreground">지원자격</dt>
               <dd className={cn(mode === 'naive' && 'font-bold text-[var(--color-danger)]')}>
-                {mode === 'naive' ? '제한 없음' : '대학 산학협력단, 기업 1곳 이상 참여'}
+                {mode === 'naive' ? '외부 전송' : '데이터팀 확인 후 사내 공유'}
               </dd>
             </dl>
             {mode === 'naive' && (

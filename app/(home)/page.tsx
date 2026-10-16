@@ -6,10 +6,9 @@ import { ClassBoard } from '@/components/class/class-board';
 import { PromptCard } from '@/components/prompt/prompt-card';
 import { examples } from '@/content/data/examples';
 import { prompts } from '@/content/data/prompts';
-import { instructor } from '@/lib/shared';
 
 const featuredPrompts = ['plan-only', 'excel-merge-run', 'interview-spec', 'git-commit'];
-const featuredExamples = ['expense-merge', 'contract-extract', 'grant-board', 'notice-auto', 'meeting-minutes', 'event-signup'];
+const featuredExamples = ['sales-merge', 'contract-extract', 'request-board', 'request-auto', 'meeting-minutes', 'event-signup'];
 
 export default function HomePage() {
   return (
@@ -19,7 +18,7 @@ export default function HomePage() {
         <div
           aria-hidden
           className="pointer-events-none absolute -right-32 -top-32 size-[36rem] rounded-full opacity-40 blur-3xl"
-          style={{ background: 'radial-gradient(circle, #00a3e0 0%, transparent 65%)' }}
+          style={{ background: 'radial-gradient(circle, #38bdf8 0%, transparent 65%)' }}
         />
         <div
           aria-hidden
@@ -28,7 +27,7 @@ export default function HomePage() {
         />
         <div className="relative mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
           <p className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-3 py-1 text-sm font-medium text-white/90">
-            삼육대학교 산학협력단 직원 교육 · 6회차
+            일반 중견기업 사무직 실무 교육 · 6회차
           </p>
           <h1 className="mt-5 text-4xl font-bold leading-[1.2] tracking-[-0.045em] sm:text-6xl">
             기획하는 사람이
@@ -36,7 +35,7 @@ export default function HomePage() {
             <span className="bg-gradient-to-r from-[#7fd3ff] to-white bg-clip-text text-transparent">곧 만드는 사람</span>이 됩니다
           </h1>
           <p className="mt-5 max-w-2xl text-lg leading-8 text-white/80">
-            Claude Code로 내 업무에 필요한 작은 소프트웨어를 직접 만들고, 쓰고, 필요하면 배포합니다. 프롬프트는 복사해서 바로 쓰고, 혼자서도 끝까지
+            ChatGPT Codex로 내 업무에 필요한 작은 소프트웨어를 직접 만들고, 쓰고, 필요하면 배포합니다. 프롬프트는 복사해서 바로 쓰고, 혼자서도 끝까지
             따라올 수 있어요.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
@@ -55,7 +54,7 @@ export default function HomePage() {
             </Link>
           </div>
           <SiteUrl />
-          <p className="mt-6 text-sm text-white/60">강의 · {instructor}</p>
+          <p className="mt-6 text-sm text-white/60">ChatGPT Codex 앱으로 함께 만드는 6회차 과정</p>
         </div>
       </section>
 
@@ -114,8 +113,8 @@ export default function HomePage() {
         <div className="mx-auto w-full max-w-6xl px-4 py-14 sm:px-6">
           <div className="mb-6 flex flex-wrap items-end justify-between gap-2">
             <div>
-              <h2 className="text-2xl font-bold tracking-[-0.035em] sm:text-3xl">산학협력단 업무 예시</h2>
-              <p className="mt-1 text-fd-muted-foreground">연구비, 협약, 과제, 행사, 문서, 총무, 대외협력, 통계 — 30가지 장면</p>
+              <h2 className="text-2xl font-bold tracking-[-0.035em] sm:text-3xl">사무 업무 예시</h2>
+              <p className="mt-1 text-fd-muted-foreground">기획, 인사, 총무, 회계, 영업지원, 구매, 고객지원, 문서 — 30가지 장면</p>
             </div>
             <Link href="/examples" className="text-sm font-medium text-fd-primary hover:underline">
               30개 모두 보기 →
@@ -140,11 +139,8 @@ export default function HomePage() {
 
       <footer className="border-t">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-4 px-4 py-8 text-sm text-fd-muted-foreground sm:px-6">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/brand/syu-logo.png" alt="삼육대학교" className="h-7 w-auto dark:hidden" />
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/brand/syu-logo-white.png" alt="삼육대학교" className="hidden h-7 w-auto dark:block" />
-          <span>업무를 바꾸는 바이브 코딩 · 강의 {instructor}</span>
+          <span className="font-semibold">직장인을 위한 바이브 코딩</span>
+          <span>ChatGPT Codex로 만드는 나의 업무 도구</span>
           <span className="ml-auto">실습 자료는 모두 교육용 가상 데이터입니다.</span>
         </div>
       </footer>

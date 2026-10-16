@@ -2,20 +2,16 @@
 @import 'fumadocs-ui/css/neutral.css';
 @import 'fumadocs-ui/css/preset.css';
 
-/* ---------- 삼육대학교 브랜드 토큰 ----------
- * SAHMYOOK Blue  PANTONE 295C  → #002855
- * SAHMYOOK Dark Gray PANTONE 446C → #3F4444
- * 엠블럼 하늘색 → #00A3E0
- */
+/* ---------- 교육 사이트 브랜드 토큰 ---------- */
 @theme {
   --font-sans: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo',
     'Malgun Gothic', system-ui, sans-serif;
   --font-mono: ui-monospace, 'SF Mono', 'JetBrains Mono', Menlo, Consolas, monospace;
 
-  --color-syu-blue: #002855;
-  --color-syu-navy: #0b2f63;
-  --color-syu-sky: #00a3e0;
-  --color-syu-gray: #3f4444;
+  --color-brand-blue: #172554;
+  --color-brand-navy: #0f172a;
+  --color-brand-sky: #38bdf8;
+  --color-brand-gray: #475569;
 
   --color-fd-background: #ffffff;
   --color-fd-foreground: #17191c;

@@ -1,5 +1,5 @@
 import type { BaseLayoutProps } from 'fumadocs-ui/layouts/shared';
-import { BookOpen, FlaskConical, FolderDown, LayoutGrid, MessageSquareText } from 'lucide-react';
+import { BookOpen, Bot, FlaskConical, FolderDown, LayoutGrid, MessageSquareText } from 'lucide-react';
 import { gitConfig } from './shared';
 import { OSSwitch } from '@/components/ui/os';
 import { PresentButton } from '@/components/present/present';
@@ -7,12 +7,11 @@ import { PresentButton } from '@/components/present/present';
 export function Brand() {
   return (
     <span className="flex items-center gap-2.5">
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src="/brand/syu-logo.png" alt="삼육대학교" className="h-7 w-auto dark:hidden" />
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src="/brand/syu-logo-white.png" alt="삼육대학교" className="hidden h-7 w-auto dark:block" />
+      <span className="grid size-8 place-items-center rounded-lg bg-fd-primary text-fd-primary-foreground">
+        <Bot className="size-5" aria-hidden />
+      </span>
       <span className="hidden h-5 w-px bg-fd-border sm:block" />
-      <span className="hidden text-[0.95rem] font-semibold tracking-[-0.03em] sm:block">바이브 코딩</span>
+      <span className="hidden text-[0.95rem] font-semibold tracking-[-0.03em] sm:block">직장인을 위한 바이브 코딩</span>
     </span>
   );
 }

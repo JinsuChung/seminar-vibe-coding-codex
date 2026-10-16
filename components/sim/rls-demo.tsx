@@ -7,14 +7,14 @@ import { Btn, SimFrame } from './frame';
 type Role = 'visitor' | 'staff' | 'admin';
 const ROLES: { key: Role; label: string; desc: string }[] = [
   { key: 'visitor', label: '방문자', desc: '로그인하지 않은 누구나' },
-  { key: 'staff', label: '담당자 김산단', desc: '로그인한 직원' },
+  { key: 'staff', label: '담당자 김업무', desc: '로그인한 직원' },
   { key: 'admin', label: '관리자', desc: '모든 권한' },
 ];
 
 const rows = [
-  { id: 1, title: '국가R&D 공모', owner: 'staff' },
-  { id: 2, title: '지역혁신 사업', owner: 'other' },
-  { id: 3, title: '기업 협력과제', owner: 'staff' },
+  { id: 1, title: '법인카드 한도 조정', owner: 'staff' },
+  { id: 2, title: '신입사원 계정 발급', owner: 'other' },
+  { id: 3, title: '전시 부스 견적 검토', owner: 'staff' },
 ];
 
 export function RlsDemo() {
@@ -100,7 +100,7 @@ export function RlsDemo() {
       <table className="mt-3 w-full text-sm">
         <thead>
           <tr className="border-b text-left text-fd-muted-foreground">
-            <th className="py-2 font-medium">공모</th>
+            <th className="py-2 font-medium">업무 요청</th>
             <th className="py-2 font-medium">등록자</th>
             <th className="py-2 text-right font-medium">해 보기</th>
           </tr>
@@ -109,7 +109,7 @@ export function RlsDemo() {
           {rows.map((r) => (
             <tr key={r.id} className="border-b last:border-0">
               <td className="py-2">{r.title}</td>
-              <td className="py-2 text-fd-muted-foreground">{r.owner === 'staff' ? '김산단' : '이협력'}</td>
+              <td className="py-2 text-fd-muted-foreground">{r.owner === 'staff' ? '김업무' : '이요청'}</td>
               <td className="py-2 text-right">
                 <span className="inline-flex gap-1.5">
                   <Btn variant="outline" onClick={() => tryAction('edit', r)}>수정</Btn>

@@ -10,11 +10,15 @@ export const supabaseConfigured = Boolean(url && anonKey);
 
 export const supabase = createClient(url ?? 'http://localhost', anonKey ?? 'missing-key');
 
-export type Grant = {
+export type RequestItem = {
   id: number;
   title: string;
-  agency: string | null;
-  deadline: string;
-  owner: string | null;
+  requester_department: string;
+  assignee_department: string;
+  priority: '긴급' | '높음' | '보통' | '낮음';
+  status: '접수' | '검토 중' | '처리 중' | '완료';
+  requested_at: string;
+  desired_due_date: string;
+  details: string;
   created_at: string;
 };

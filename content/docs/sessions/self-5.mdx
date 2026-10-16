@@ -6,7 +6,7 @@ description: "5회차와 6회차 사이. SQL과 RLS 정책을 읽는 눈을 기�
 <SelfStudyHeader n={5.5} />
 
 <Callout title="준비물">
-  5회차에 만든 공모 보드와 Supabase 프로젝트. 없으면 [자료실](/downloads)의 **5회차 완성본**(`session5-grant-board.zip`)을 README대로 준비하세요. Claude Code에게 "README대로 실행할 수 있게 도와줘"라고 하면 됩니다.
+  5회차에 만든 업무 요청 보드와 Supabase 프로젝트. 없으면 [자료실](/downloads)의 **5회차 완성본**을 README대로 준비하세요. Codex에게 "README대로 실행할 수 있게 도와줘"라고 하면 됩니다.
 </Callout>
 
 ## 1일차 SQL 네 문장만 읽자
@@ -25,12 +25,12 @@ SQL은 직접 쓸 필요가 없습니다. 하지만 AI가 만든 SQL을 **읽고
 
 | SQL | 엑셀로 치면 | 예 |
 | --- | --- | --- |
-| `select … from grants` | 시트에서 보고 싶은 열만 보기 | `select title, deadline from grants` |
-| `where …` | 필터 | `where deadline < '2026-11-01'` |
-| `order by …` | 정렬 | `order by deadline` |
-| `insert into grants …` | 맨 아래 새 줄 추가 | `insert into grants (title, deadline) values ('새 공모', '2026-12-01')` |
-| `update grants set … where …` | 조건에 맞는 칸 고치기 | `update grants set owner = '김산단' where id = 3` |
-| `delete from grants where …` | 조건에 맞는 줄 삭제 | `delete from grants where id = 3` |
+| `select … from requests` | 시트에서 보고 싶은 열만 보기 | `select title, due_date from requests` |
+| `where …` | 필터 | `where due_date < '2026-11-01'` |
+| `order by …` | 정렬 | `order by due_date` |
+| `insert into requests …` | 맨 아래 새 줄 추가 | `insert into requests (title, due_date) values ('새 요청', '2026-12-01')` |
+| `update requests set … where …` | 조건에 맞는 칸 고치기 | `update requests set owner = '김담당' where id = 3` |
+| `delete from requests where …` | 조건에 맞는 줄 삭제 | `delete from requests where id = 3` |
 
 <Callout type="warn" title="이 두 줄은 꼭 다시 보기">
   `where` 없는 `update`와 `delete`는 **모든 행**을 바꾸거나 지웁니다. AI가 만든 SQL에 `where`가 없는 `update`·`delete`가 있으면 실행하지 말고 물어보세요.
@@ -44,11 +44,11 @@ SQL은 직접 쓸 필요가 없습니다. 하지만 AI가 만든 SQL을 **읽고
 </Step>
 <Step id="m1-2" title="퀴즈: 이 SQL은 무엇을 할까">
 <Expected title="스스로 풀어 보기">{`
-1) select title, deadline from grants where deadline <= '2026-10-31' order by deadline;
-2) update grants set owner = '연구지원팀';
-3) delete from grants where deadline < current_date;
+1) select title, due_date from requests where due_date <= '2026-10-31' order by due_date;
+2) update requests set owner = '운영팀';
+3) delete from requests where due_date < current_date;
 `}</Expected>
-<p>답: 1) 10월 31일까지 마감인 공모의 사업명과 마감일을 마감 순으로 보기 2) <b>모든 공모</b>의 담당자를 바꿈(where 없음, 위험!) 3) 오늘 이전에 마감된 공모를 모두 삭제. 잘 모르겠으면 Claude Code에 붙여 넣고 물어보세요.</p>
+<p>답: 1) 10월 31일까지인 요청의 제목과 희망일을 순서대로 보기 2) <b>모든 요청</b>의 담당자를 바꿈(where 없음, 위험!) 3) 오늘 이전 요청을 모두 삭제. 잘 모르겠으면 Codex에 붙여 넣고 물어보세요.</p>
 </Step>
 </Lab>
 
@@ -65,7 +65,7 @@ SQL은 직접 쓸 필요가 없습니다. 하지만 AI가 만든 SQL을 **읽고
 | 등록한 본인만 수정 | 로그인 사용자 | 고치기 (update) | `created_by = auth.uid()` (내가 등록한 것) |
 | 등록한 본인만 삭제 | 로그인 사용자 | 지우기 (delete) | 내가 등록한 것 |
 
-`auth.uid()`는 "지금 로그인한 사람의 번호"입니다. 그래서 **남이 등록한 공모는 고치거나 지울 수 없습니다.**
+`auth.uid()`는 "지금 로그인한 사람의 번호"입니다. 그래서 **남이 등록한 요청은 고치거나 지울 수 없습니다.**
 
 </DeepDive>
 
@@ -75,19 +75,19 @@ SQL은 직접 쓸 필요가 없습니다. 하지만 AI가 만든 SQL을 **읽고
 <Step id="m2-1" title="담당자 계정 하나 더 만들기">
 <p>Supabase 대시보드 <b>Authentication → Users → Add user → Create new user</b>로 두 번째 계정(예: <code>tester2@example.com</code>)을 만들고 <b>Auto Confirm User</b>를 켭니다. 비밀번호는 본인이 정해 직접 입력하세요.</p>
 </Step>
-<Step id="m2-2" title="계정 A로 공모 1건 등록">
-<p>localhost에서 첫 번째 계정으로 로그인해 공모를 하나 등록합니다.</p>
+<Step id="m2-2" title="계정 A로 요청 1건 등록">
+<p>localhost에서 첫 번째 계정으로 로그인해 업무 요청을 하나 등록합니다.</p>
 </Step>
 <Step id="m2-3" title="계정 B로 지워 보기">
-<p>로그아웃 → 두 번째 계정으로 로그인 → 방금 등록한 공모의 <b>삭제</b>를 눌러 봅니다.</p>
+<p>로그아웃 → 두 번째 계정으로 로그인 → 방금 등록한 요청의 <b>삭제</b>를 눌러 봅니다.</p>
 <Expected>{`
-⚠ 본인이 등록한 공모만 삭제할 수 있어요 (RLS 정책).
+⚠ 본인이 등록한 요청만 삭제할 수 있어요 (RLS 정책).
 `}</Expected>
-<p>그다음 두 번째 계정으로 공모를 하나 등록하고 지워 보세요. 내 것은 지워집니다.</p>
+<p>그다음 두 번째 계정으로 요청을 하나 등록하고 지워 보세요. 내 것은 지워집니다.</p>
 </Step>
 <Step id="m2-4" title="로그아웃 상태에서 확인">
-<p>로그아웃하면 목록은 보이지만 등록 폼과 삭제 버튼이 사라집니다. 화면에서 버튼을 숨긴 것과 별개로, <b>데이터베이스도 막고 있다</b>는 것을 Claude Code에 확인해 보세요.</p>
-<PromptCard title="정말 막혀 있는지" text="로그인하지 않은 사용자가 화면을 거치지 않고 공개 키로 직접 grants에 insert나 delete를 시도하면 어떻게 되는지, schema.sql의 정책을 근거로 설명해줘." compact />
+<p>로그아웃하면 목록은 보이지만 등록 폼과 삭제 버튼이 사라집니다. 화면에서 버튼을 숨긴 것과 별개로, <b>데이터베이스도 막고 있다</b>는 것을 Codex에 확인해 보세요.</p>
+<PromptCard title="정말 막혀 있는지" text="로그인하지 않은 사용자가 화면을 거치지 않고 공개 키로 직접 requests에 insert나 delete를 시도하면 어떻게 되는지, schema.sql의 정책을 근거로 설명해줘." compact />
 </Step>
 </Lab>
 
@@ -99,13 +99,13 @@ SQL은 직접 쓸 필요가 없습니다. 하지만 AI가 만든 SQL을 **읽고
 <Step id="m3-1" title="계획 먼저">
 <PromptCard
   title="항목 추가 계획"
-  text="공모에 '지원 규모'(예: 과제당 최대 1억 원) 항목을 추가하려고 해. 아직 실행하지 말고, Supabase에서 실행할 SQL, 화면에서 바꿀 곳(목록 카드, 등록 폼), supabase/schema.sql 수정 내용을 계획으로 보여줘."
+  text="업무 요청에 '긴급도'(낮음/보통/높음) 항목을 추가하려고 해. 아직 실행하지 말고, Supabase에서 실행할 SQL, 화면에서 바꿀 곳(목록 카드, 등록 폼), supabase/schema.sql 수정 내용을 계획으로 보여줘."
 />
 <Expected>{`
 ● 계획
-  1) SQL Editor에서 실행:  alter table public.grants add column budget text;
-  2) components/board.tsx — 카드에 지원 규모 표시, 등록 폼에 입력칸 추가
-  3) supabase/schema.sql — create table에 budget 컬럼 추가 (다음에 새로 만들 때 반영)
+  1) SQL Editor에서 실행: alter table public.requests add column priority text;
+  2) components/board.tsx — 카드에 긴급도 표시, 등록 폼에 선택 칸 추가
+  3) supabase/schema.sql — create table에 priority 컬럼과 값 제한 추가
   RLS 정책은 바꿀 필요 없음 (행 단위 규칙이라 새 컬럼에도 그대로 적용)
 `}</Expected>
 </Step>
@@ -113,7 +113,7 @@ SQL은 직접 쓸 필요가 없습니다. 하지만 AI가 만든 SQL을 **읽고
 <p>계획의 SQL을 Supabase <b>SQL Editor</b>에 붙여 넣고 <b>Run</b>. 그다음 승인해서 화면과 schema.sql을 고치게 합니다.</p>
 </Step>
 <Step id="m3-3" title="확인하고 커밋·배포">
-<p>localhost에서 지원 규모를 넣어 등록해 보고, Table Editor에 값이 들어갔는지 확인한 뒤 커밋·푸시하세요.</p>
+<p>localhost에서 긴급도를 넣어 등록해 보고, Table Editor에 값이 들어갔는지 확인한 뒤 커밋·푸시하세요.</p>
 <Trouble>
 <Issue q="column does not exist 에러가 나요">SQL을 아직 실행하지 않았거나 다른 프로젝트에서 실행한 경우입니다. 대시보드 왼쪽 위 프로젝트 이름이 맞는지 확인하고 다시 실행하세요.</Issue>
 </Trouble>
@@ -127,7 +127,7 @@ SQL은 직접 쓸 필요가 없습니다. 하지만 AI가 만든 SQL을 **읽고
 <PromptCard
   title="질문을 SQL로"
   text="Supabase SQL Editor에서 실행할 SQL을 만들어줘. 질문: {{q}} 실행하기 전에 이 SQL이 데이터를 바꾸지 않는(조회만 하는) 문장인지도 알려줘."
-  vars={[{ key: 'q', label: '궁금한 것', placeholder: '앞으로 30일 안에 마감되는 공모는 몇 건이고, 담당자별로는 몇 건씩이야?' }]}
+  vars={[{ key: 'q', label: '궁금한 것', placeholder: '앞으로 30일 안에 완료해야 하는 요청은 몇 건이고, 담당자별로는 몇 건씩이야?' }]}
 />
 <p>받은 SQL을 SQL Editor에 붙여 넣고 실행해 보세요. <code>select</code>로 시작하는 조회 문장은 데이터를 바꾸지 않습니다.</p>
 </Step>
@@ -135,9 +135,9 @@ SQL은 직접 쓸 필요가 없습니다. 하지만 AI가 만든 SQL을 **읽고
 
 <Lab session={5.5} title="미션 5 · 엑셀로 내보내기" level="선택" minutes={10}>
 <Step id="m5-1" title="Table Editor에서 CSV 내보내기">
-<p>Supabase <b>Table Editor → grants → Export → Export table as CSV</b>.</p>
+<p>Supabase <b>Table Editor → requests → Export → Export table as CSV</b>.</p>
 <Callout type="warn" title="Windows 엑셀에서 한글이 깨지면">
-  Supabase가 내보낸 CSV는 UTF-8이라 Windows 엑셀에서 바로 열면 한글이 깨질 수 있습니다. 내려받은 CSV를 Claude Code로 연 폴더에 넣고 아래처럼 요청하세요.
+  Supabase가 내보낸 CSV는 UTF-8이라 Windows 엑셀에서 바로 열면 한글이 깨질 수 있습니다. 내려받은 CSV를 Codex로 연 폴더에 넣고 아래처럼 요청하세요.
 </Callout>
 <PromptCard id="csv-encoding" compact />
 </Step>
@@ -158,8 +158,8 @@ SQL은 직접 쓸 필요가 없습니다. 하지만 AI가 만든 SQL을 **읽고
 </Lab>
 
 <Lab session={5.5} title="미션 7 · 6회차 준비" level="필수" minutes={10}>
-<Step id="m7-1" title="Claude Console 계정과 사용 한도">
-<p><a href="https://platform.claude.com" target="_blank">Claude Console</a>에 가입하고, 크레딧을 충전하기 전에 <b>월 사용 한도</b>부터 정해 두세요. 교육용 키를 강사가 따로 준다면 이 단계는 건너뛰어도 됩니다.</p>
+<Step id="m7-1" title="OpenAI API 프로젝트와 사용 한도">
+<p><a href="https://platform.openai.com" target="_blank">OpenAI API 플랫폼</a>에서 프로젝트를 준비하고 월 예산과 알림을 설정하세요. 화면과 정책은 바뀔 수 있으므로 공식 결제 문서를 확인합니다. 교육용 키를 강사가 따로 준다면 이 단계는 건너뜁니다.</p>
 </Step>
 <Step id="m7-2" title="Supabase 프로젝트 깨워 두기">
 <p>무료 프로젝트는 1주일 넘게 안 쓰면 일시정지됩니다. 수업 전날 대시보드에서 프로젝트가 켜져 있는지 확인하세요.</p>
@@ -172,6 +172,6 @@ SQL은 직접 쓸 필요가 없습니다. 하지만 AI가 만든 SQL을 **읽고
 
 <Checklist list="self-5" />
 
-<Assignment id="q-5-5" title="다음 수업에서 물어볼 것" placeholder="예) 담당자가 바뀌면 이전 담당자가 등록한 공모를 어떻게 넘겨받나요?" />
+<Assignment id="q-5-5" title="다음 수업에서 물어볼 것" placeholder="예) 담당자가 바뀌면 이전 담당자가 등록한 요청을 어떻게 넘겨받나요?" />
 
 <NextSession n={5.5} />

@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import './globals.css';
 
-export const metadata = { title: '삼육대 산단 공모 보드', description: '연구과제 공모 일정 D-day 보드 (교육용)' };
+export const metadata = { title: '사내 업무 요청·처리 현황 보드', description: 'Supabase와 RLS로 보호하는 부서 간 업무 요청 보드' };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (

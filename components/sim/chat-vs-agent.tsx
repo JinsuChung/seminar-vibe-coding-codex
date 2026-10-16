@@ -53,7 +53,7 @@ export function ChatVsAgent() {
     >
       <div className="grid gap-4 md:grid-cols-2">
         <Column title="챗봇 (웹 채팅)" lines={chat} step={step} hands={hands(chat)} tone="muted" />
-        <Column title="에이전트 (Claude Code)" lines={agent} step={step} hands={hands(agent)} tone="primary" />
+        <Column title="에이전트 (Codex)" lines={agent} step={step} hands={hands(agent)} tone="primary" />
       </div>
       <div className="mt-4 flex flex-wrap items-center gap-2">
         <Btn onClick={() => setStep((s) => Math.min(max, s + 1))} disabled={step >= max}>

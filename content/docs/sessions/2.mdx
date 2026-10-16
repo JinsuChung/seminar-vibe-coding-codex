@@ -1,6 +1,6 @@
 ---
 title: 2회차 · 인스턴트 소프트웨어
-description: 내 PC에서 엑셀 취합기와 파일 정리 도구를 10분 안에 만들어 쓰고, 필요 없으면 지웁니다.
+description: Codex 앱의 파일 도구와 AGENTS.md를 이용해 엑셀 취합기와 파일 정리 도구를 만듭니다.
 ---
 
 <SessionHeader n={2} />
@@ -19,7 +19,7 @@ description: 내 PC에서 엑셀 취합기와 파일 정리 도구를 10분 안�
 
 ### 4단계 작업법
 
-Anthropic은 Claude Code를 쓸 때 **바로 만들게 하지 말고 탐색과 계획을 분리하라**고 권합니다. 그래야 엉뚱한 문제를 푸는 일을 막습니다 ([Best practices for Claude Code](https://code.claude.com/docs/en/best-practices)).
+Codex로 여러 파일을 다룰 때는 **바로 만들게 하지 말고 탐색과 계획을 분리**합니다. 그래야 엉뚱한 문제를 풀거나 원본을 덮어쓰는 일을 막습니다.
 
 | 단계 | AI가 하는 일 | 사람이 하는 일 | 모드 |
 | --- | --- | --- | --- |
@@ -67,19 +67,19 @@ Anthropic은 Claude Code를 쓸 때 **바로 만들게 하지 말고 탐색과 �
   "매달 파일 개수가 바뀌나요?", "합계가 안 맞으면 어떻게 표시할까요?" 같은 질문은 막상 만들기 전에는 떠오르지 않습니다. 질문에 답하다 보면 기획서가 완성되고, 그 기획서가 곧 설계도가 됩니다.
 </Analogy>
 
-### CLAUDE.md — AI에게 주는 업무 인수인계서
+### AGENTS.md — AI에게 주는 업무 인수인계서
 
-폴더에 `CLAUDE.md` 파일을 두면 Claude가 대화를 시작할 때마다 읽습니다. `/init`을 입력하면 초안을 만들어 줍니다. **짧게, 매번 필요한 것만** 씁니다. 길면 중요한 규칙이 묻혀서 오히려 안 지켜집니다.
+폴더에 `AGENTS.md` 파일을 두면 Codex가 작업할 때 프로젝트 규칙으로 참고합니다. **짧게, 매번 필요한 것만** 씁니다. 적용 범위와 우선순위 등 현재 동작은 [OpenAI AGENTS.md 공식 문서](https://developers.openai.com/codex/guides/agents-md/)를 확인하세요.
 
-```markdown title="CLAUDE.md 예시"
-# 산학협력단 업무 규칙
+```markdown title="AGENTS.md 예시"
+# 사내 업무 규칙
 - 모든 답변과 파일은 한국어로
 - 원본 파일은 절대 수정하지 말고, 결과물은 '결과' 폴더에 새로 만들 것
 - 날짜는 YYYY-MM-DD, 금액은 원 단위 천 단위 쉼표
 - 파일을 삭제하거나 이동하기 전에는 변경 목록을 먼저 보여줄 것
 ```
 
-<PromptCard id="claude-md" />
+<PromptCard title="AGENTS.md 만들기" text="이 폴더의 반복 업무 규칙을 질문으로 확인한 뒤 AGENTS.md 초안을 만들어줘. 원본 보호, 결과 폴더, 날짜·금액 형식, 삭제 전 승인 규칙을 포함하고 짧게 써줘." />
 
 | 넣을 것 | 뺄 것 |
 | --- | --- |
@@ -106,12 +106,12 @@ Anthropic은 Claude Code를 쓸 때 **바로 만들게 하지 말고 탐색과 �
 
 ## 실습
 
-[2회차 실습 자료](/downloads)를 내려받아 압축을 풉니다. 먼저 실습 폴더에 CLAUDE.md를 만들어 두면 이후 실습이 안전해집니다.
+[2회차 실습 자료](/downloads)를 내려받아 압축을 풉니다. 먼저 실습 폴더에 AGENTS.md를 만들어 두면 이후 실습이 안전해집니다.
 
 <Lab session={2} title="실습 2-1 · 엑셀 취합기 (함께)" level="필수" minutes={12} goal="가상 과제 10개의 집행내역 엑셀을 과제별·비목별 합계 한 장으로 모읍니다.">
 
-<Step id="2-0" title="작업 규칙(CLAUDE.md) 만들기">
-<PromptCard id="claude-md" compact />
+<Step id="2-0" title="작업 규칙(AGENTS.md) 만들기">
+<PromptCard title="AGENTS.md 만들기" text="원본 파일은 수정하지 않고 결과는 결과 폴더에 만들며, 삭제·이동 전에 목록을 보여주도록 AGENTS.md를 만들어줘." compact />
 </Step>
 
 <Step id="2-1a" title="플랜 모드에서 취합 계획 세우기">
@@ -125,7 +125,7 @@ Anthropic은 Claude Code를 쓸 때 **바로 만들게 하지 말고 탐색과 �
 ⚠ 양식 차이 발견
   집행내역_과제03.xlsx  '집행금액' 대신 '금액(원)'
   집행내역_과제07.xlsx  1행이 제목, 2행부터 표
-  집행내역_과제09.xlsx  비목 '재료비'를 '연구재료비'로 표기
+  비용집행_구매팀.xlsx  '구매비'를 '소모품비'로 표기
 ● 계획
   1) 같은 뜻의 열 이름을 맞춘다  2) 과제·비목별 합계  3) 검산표 시트 추가
 > 승인하시면 진행하겠습니다.
@@ -146,7 +146,7 @@ Anthropic은 Claude Code를 쓸 때 **바로 만들게 하지 말고 탐색과 �
 `}</Expected>
 
 <Trouble>
-<Issue q="Python이 없다고 나와요">Claude Code에게 "Python이 설치돼 있는지 확인하고, 없으면 설치 방법을 안내해줘"라고 하세요. 학교 PC 보안 정책으로 설치가 막히면 강사에게 알려 주세요.</Issue>
+<Issue q="Python이 없다고 나와요">Codex에게 "Python이 설치돼 있는지 확인하고, 없으면 설치 방법을 안내해줘"라고 하세요. 회사 PC 정책으로 설치가 막히면 IT 담당자에게 문의합니다.</Issue>
 <Issue q="합계가 맞지 않아요">어느 파일에서 차이가 나는지 물어보세요: "파일별로 원본 합계와 취합 결과를 나란히 비교해서 차이 나는 파일을 찾아줘."</Issue>
 <Issue q="결과 파일이 엑셀에서 안 열려요">엑셀이 그 파일을 열고 있지 않은지 확인하고, "엑셀에서 열리는 .xlsx 형식으로 다시 저장해줘"라고 요청하세요.</Issue>
 </Trouble>
@@ -220,7 +220,7 @@ Anthropic은 Claude Code를 쓸 때 **바로 만들게 하지 말고 탐색과 �
   items={[
     '탐색 → 계획 → 실행 → 검증. 계획 승인과 결과 확인은 사람의 몫이다.',
     '목적·입력·출력·조건·검증, 다섯 칸을 채우면 한 번에 원하는 결과가 나온다.',
-    '반복되는 규칙은 CLAUDE.md에 짧게 적어 둔다.',
+    '반복되는 규칙은 AGENTS.md에 짧게 적어 둔다.',
   ]}
 />
 
@@ -231,7 +231,7 @@ Anthropic은 Claude Code를 쓸 때 **바로 만들게 하지 말고 탐색과 �
 ### 과제
 
 <Assignment id="s2" title="내 업무 도구 1개 기획서 쓰기" placeholder={'도구 이름:\n목적:\n입력:\n출력:\n조건:\n검증:'}>
-  1회차에 적은 반복 업무 중 하나를 골라 5요소로 정리하세요. Claude Code의 인터뷰형 기획 프롬프트를 써도 됩니다.
+  1회차에 적은 반복 업무 중 하나를 골라 5요소로 정리하세요. Codex의 인터뷰형 기획 프롬프트를 써도 됩니다.
 </Assignment>
 
 <SessionPrompts n={2} />

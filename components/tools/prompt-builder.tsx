@@ -171,7 +171,7 @@ export function PromptBuilder() {
           <pre className="whitespace-pre-wrap px-4 py-3 font-sans text-[1rem] leading-7 tracking-[-0.015em]">{prompt}</pre>
         </div>
         <div className={cn('rounded-xl border bg-fd-card p-4 text-sm leading-6', !suggestion.length && 'opacity-70')}>
-          <p className="font-semibold">CLAUDE.md에 옮겨 둘 만한 조건</p>
+          <p className="font-semibold">AGENTS.md에 옮겨 둘 만한 조건</p>
           {suggestion.length ? (
             <ul className="mt-1 list-disc pl-5">
               {suggestion.map((s) => (
